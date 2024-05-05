@@ -1,4 +1,4 @@
-type: horizontal-stack
+type: horizontal-stack #Home page v0
 cards:
   - type: vertical-stack
     cards:
