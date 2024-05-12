@@ -1,10 +1,10 @@
-type: horizontal-stack #Home page v0
+type: horizontal-stack
 cards:
   - type: vertical-stack
     cards:
-      - type: horizontal-stack #Ligne 1 Dashbord
+      - type: horizontal-stack
         cards:
-          - type: markdown #Info Date
+          - type: markdown
             content: >-
               {% set date_jour = (states('sensor.date_fr_complete')) %} {% set
               couleur_jour =
@@ -13,7 +13,11 @@ cards:
               (states('sensor.rte_tempo_prochaine_couleur_visuel'))%}
 
               <div> <ha-icon icon="mdi:calendar-range"></ha-icon> {{date_jour}}
-              {{now().strftime('    %Hh%M')}}  </div> 
+              {{now().strftime('    %Hh%M')}} 
+
+
+
+              </div> 
             card_mod:
               style:
                 .: |
@@ -38,7 +42,7 @@ cards:
                       border-top-left-radius: 10px; 
                       border-top-right-radius: 10px; 
                       }
-      - type: horizontal-stack #Ligne 2 dashbord
+      - type: horizontal-stack
         cards:
           - type: custom:mod-card
             card_mod:
@@ -55,7 +59,7 @@ cards:
             card:
               type: horizontal-stack
               cards:
-                - type: custom:button-card #Info Tempo
+                - type: custom:button-card
                   entity: sensor.shelly_pro_em_em0_power
                   icon: mdi:transmission-tower-export
                   aspect_ratio: 3/3
@@ -168,16 +172,16 @@ cards:
                           style="width: 20px; height: 20px; color: deepskyblue;">
                           </ha-icon><span>Tempo J+1: <span style="color: var(--text-color-sensor);">${states['sensor.rte_tempo_prochaine_couleur_visuel'].state}</span></span>`
                       ]]]
-                - type: custom:power-flow-card-plus #Flow production
+                - type: custom:power-flow-card-plus
                   full_size: false
                   entities:
-                    battery: {}
-                    solar:
-                      display_zero_state: true
-                      entity: sensor.prod_elec
-                    grid:
-                      entity: sensor.shelly_pro_em_em0_power
-                      name: EDF
+                    home:
+                      entity: sensor.home_consumption
+                      color_icon: true
+                      secondary_info: {}
+                    Card:
+                      - height: 220px
+                      - width: 140px
                     fossil_fuel_percentage:
                       icon: mdi:pine-tree
                       color_icon: true
@@ -193,7 +197,45 @@ cards:
                         - 80
                         - 136
                         - 204
-                  clickable_entities: false
+                    grid:
+                      icon: ''
+                      name: EDF
+                      entity: sensor.shelly_pro_em_em0_power
+                      secondary_info: {}
+                      color_value: true
+                      color_icon: true
+                      color_circle: true
+                      color:
+                        consumption:
+                          - 80
+                          - 145
+                          - 219
+                        production:
+                          - 7
+                          - 247
+                          - 2
+                    solar:
+                      icon: ''
+                      color_icon: true
+                      color_value: true
+                      entity: sensor.shelly_pro_em_em1_power
+                    individual1:
+                      icon: mdi:heat-pump
+                      color:
+                        - 230
+                        - 5
+                        - 189
+                      name: Pompe à chaleur
+                      color_icon: false
+                    individual2:
+                      name: Baie info
+                      icon: mdi:desktop-classic
+                  w_decimals: 0
+                  kw_decimals: 2
+                  min_flow_rate: 0.9
+                  max_flow_rate: 6
+                  watt_threshold: 10000
+                  clickable_entities: true
                   display_zero_lines:
                     mode: show
                     transparency: 50
@@ -201,18 +243,9 @@ cards:
                       - 189
                       - 189
                       - 189
-                  use_new_flow_rate_model: true
-                  w_decimals: 0
-                  kw_decimals: 1
-                  min_flow_rate: 0.75
-                  max_flow_rate: 6
-                  max_expected_power: 9000
-                  min_expected_power: 0.01
-                  watt_threshold: 1000
-                  transparency_zero_lines: 0
-                  disable_dots: false
                   dashboard_link: ''
-      - type: custom:mod-card #Ligne 3 dashbord info reseau et prod
+                  use_new_flow_rate_model: false
+      - type: custom:mod-card
         card_mod:
           style:
             hui-horizontal-stack-card $: |
@@ -226,7 +259,7 @@ cards:
         card:
           type: horizontal-stack
           cards:
-            - type: custom:stack-in-card #Info Réseau
+            - type: custom:stack-in-card
               title: []
               cards:
                 - type: custom:bar-card
@@ -349,7 +382,7 @@ cards:
                     background: transparent;
                     
                   }
-            - type: custom:stack-in-card #Info Prod
+            - type: custom:stack-in-card
               title: []
               cards:
                 - type: custom:bar-card
@@ -472,7 +505,7 @@ cards:
                     background: transparent;
                     
                   }
-      - type: custom:mod-card #Ligne 4 dashbord - suivi autoconso et histo jour
+      - type: custom:mod-card
         card_mod:
           style:
             hui-horizontal-stack-card $: |
@@ -486,9 +519,9 @@ cards:
         card:
           type: horizontal-stack
           cards:
-            - type: energy-solar-consumed-gauge #carte tazux autoconsommation
-            - type: energy-usage-graph # carte suivi conso journalière
-      - type: custom:mod-card #Ligne 5 dashbord - info dynamique
+            - type: energy-solar-consumed-gauge
+            - type: energy-usage-graph
+      - type: custom:mod-card
         card_mod:
           style:
             hui-horizontal-stack-card $: |
@@ -501,11 +534,11 @@ cards:
                 flex: auto; 
               }
         card:
-          type: horizontal-stack # ligne 5 dashbord
+          type: horizontal-stack
           cards:
-            - type: vertical-stack # ligne 5 colonne Gauche
+            - type: vertical-stack
               cards:
-                - event_grouping: true # Carte poubelle
+                - event_grouping: true
                   drop_todayevents_from: '23:00:00'
                   next_days: 1
                   pattern:
@@ -536,7 +569,7 @@ cards:
                     - calendar.ramassage_ordures_menageres
                   filter_events: false
                   full_size: false
-                - show_name: false # bouton selection affichage
+                - show_name: false
                   show_icon: true
                   type: button
                   entity: input_select.affichage_menu_select
@@ -550,7 +583,7 @@ cards:
                       entity_id: input_select.affichage_menu_select
                     data:
                       cycle: true
-                - type: conditional # affichage surveillance
+                - type: conditional
                   conditions:
                     - condition: state
                       entity: input_select.affichage_menu_select
@@ -558,7 +591,7 @@ cards:
                   card:
                     type: vertical-stack
                     cards:
-                      - type: custom:button-card #info surveillance
+                      - type: custom:button-card
                         icon: mdi:shield-home
                         aspect_ratio: 4/3
                         name: Surveillance
@@ -650,7 +683,7 @@ cards:
                                 style="width: 20px; height: 20px; color: deepskyblue;">
                                 </ha-icon><span>Forcée: <span style="color: var(--text-color-sensor);">${states['input_boolean.surveillance_forcee'].state}</span></span>`
                             ]]]
-                - type: conditional # affichage Pronote
+                - type: conditional
                   conditions:
                     - condition: state
                       entity: input_select.affichage_menu_select
@@ -665,9 +698,9 @@ cards:
                     icon: mdi:account-school
                     icon_height: 30px
                     name: Pronote
-            - type: vertical-stack # ligne 5 colonne Droite
+            - type: vertical-stack
               cards:
-                - type: conditional # affichage Lumière
+                - type: conditional
                   conditions:
                     - condition: state
                       entity: input_select.affichage_menu_select
@@ -752,7 +785,7 @@ cards:
                                     show_spinner: true
                                     tap_action:
                                       action: toggle
-                - type: conditional # affichage camera surveillance
+                - type: conditional
                   conditions:
                     - condition: state
                       entity: input_select.affichage_menu_select
@@ -782,7 +815,7 @@ cards:
                           tap_action:
                             action: navigate
                             navigation_path: /tablette-murale/surveillance
-                - type: conditional # affichage commandes volets
+                - type: conditional
                   conditions:
                     - condition: state
                       entity: input_select.affichage_menu_select
@@ -869,7 +902,7 @@ cards:
                                         navigation_path: /tablette-murale/volet
                                       name: Paramétrage volet
                                       icon: mdi:window-shutter-cog
-                - type: conditional # affichage calendrier
+                - type: conditional
                   conditions:
                     - condition: state
                       entity: input_select.affichage_menu_select
@@ -880,7 +913,7 @@ cards:
                     entities:
                       - calendar.famille
                       - calendar.ramassage_ordures_menageres
-                - type: conditional # affichage agenda pronote
+                - type: conditional
                   conditions:
                     - condition: state
                       entity: input_select.affichage_menu_select
