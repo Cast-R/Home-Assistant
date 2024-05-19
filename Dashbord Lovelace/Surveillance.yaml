@@ -1,0 +1,102 @@
+type: vertical-stack
+cards:
+  - type: custom:mod-card
+    card_mod:
+      style:
+        hui-horizontal-stack-card $: |
+          div#root > :first-child {
+            width: 25%;
+            flex: auto; 
+          }
+          div#root > :last-child {
+            width: 75%;
+            flex: auto; 
+          }
+    card:
+      type: horizontal-stack
+      cards:
+        - type: vertical-stack
+          cards:
+            - type: vertical-stack
+              cards:
+                - type: vertical-stack
+                  cards:
+                    - show_name: true
+                      show_icon: true
+                      type: button
+                      tap_action:
+                        action: navigate
+                        navigation_path: /lovelace/home
+                      name: Accueil
+                      icon: mdi:home
+                    - show_name: true
+                      show_icon: true
+                      type: button
+                      tap_action:
+                        action: more-info
+                      entity: person.ragneau
+                    - show_name: true
+                      show_icon: true
+                      type: button
+                      tap_action:
+                        action: more-info
+                      entity: person.carine
+                    - show_name: true
+                      show_icon: true
+                      type: button
+                      tap_action:
+                        action: toggle
+                      entity: input_boolean.active_surveillance
+                      show_state: false
+                    - show_name: true
+                      show_icon: true
+                      type: button
+                      tap_action:
+                        action: toggle
+                      entity: switch.camera_ext_1_push_notifications_2
+                      show_state: true
+                      name: Notif Cam 1
+                    - show_name: true
+                      show_icon: true
+                      type: button
+                      tap_action:
+                        action: toggle
+                      entity: switch.camera_ext_2_push_notifications_2
+                      name: Notif Cam 2
+                      show_state: true
+        - type: vertical-stack
+          cards:
+            - camera_view: live
+              type: picture-glance
+              title: Cam ext 1
+              entities:
+                - entity: select.camera_ext_1_floodlight_mode
+                - entity: select.camera_ext_1_ptz_preset
+              camera_image: camera.camera_ext_1_sub_lens_0
+              tap_action:
+                action: navigate
+                navigation_path: /nest-hub/camext1
+            - camera_view: live
+              type: picture-glance
+              title: Cam ext 2
+              entities:
+                - entity: select.camera_ext_2_floodlight_mode
+                - entity: select.camera_ext_2_ptz_preset
+              camera_image: camera.camera_ext_2_sub_lens_0
+              tap_action:
+                action: navigate
+                navigation_path: /nest-hub/camext2
+            - show_state: false
+              show_name: false
+              camera_view: live
+              type: picture-entity
+              camera_image: camera.camera_salon_sub
+              aspect_ratio: '2:1'
+              tap_action:
+                action: more-info
+              entity: camera.camera_salon_sub
+            - type: custom:mushroom-select-card
+              entity: input_select.surveillance_camera_int_activation
+              secondary_info: none
+              layout: horizontal
+

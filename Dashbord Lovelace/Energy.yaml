@@ -1,0 +1,88 @@
+type: vertical-stack
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - show_name: true # retour home
+                show_icon: true
+                type: button
+                tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/home
+                icon: mdi:home
+                icon_height: 25px
+              - type: energy-date-selection # choix date analyse
+          - type: energy-usage-graph
+          - type: horizontal-stack
+            cards:
+              - type: energy-grid-neutrality-gauge
+              - type: energy-solar-consumed-gauge
+          - type: energy-sources-table
+      - type: vertical-stack
+        cards:
+          - type: energy-distribution
+          - type: custom:apexcharts-card
+            stacked: true
+            graph_span: 7d
+            span:
+              end: day
+            header:
+              show: true
+              title: Suivi Couts électricité (abonnement non inclus)
+            apex_config:
+              legend:
+                show: true
+              chart:
+                height: 400px
+            series:
+              - entity: sensor.grid_energy_meter_daily_edf_tempo_blanc_hc_cost
+                type: column
+                color: rgb(170,170,170)
+                name: blanc HC
+                group_by:
+                  func: last
+                  duration: 1d
+                show:
+                  datalabels: total
+              - entity: sensor.grid_energy_meter_daily_edf_tempo_blanc_hp_cost
+                type: column
+                color: rgb(128,128,128)
+                name: Blanc HP
+                group_by:
+                  func: last
+                  duration: 1d
+              - entity: sensor.grid_energy_meter_daily_edf_tempo_rouge_hp_cost
+                type: column
+                color: rgb(255,0,0)
+                name: Rouge HP
+                group_by:
+                  func: last
+                  duration: 1d
+              - entity: sensor.grid_energy_meter_daily_edf_tempo_rouge_hc_cost
+                type: column
+                color: rgb(255,141,126)
+                name: Rouge HC
+                group_by:
+                  func: last
+                  duration: 1d
+                show:
+                  datalabels: total
+              - entity: sensor.grid_energy_meter_daily_edf_tempo_bleu_hp_cost
+                type: column
+                color: rgb(63,72,204)
+                name: Bleu HP
+                group_by:
+                  func: last
+                  duration: 1d
+              - entity: sensor.grid_energy_meter_daily_edf_tempo_bleu_hc_cost
+                type: column
+                color: rgb(113,155,255)
+                name: Bleu HC
+                group_by:
+                  func: last
+                  duration: 1d
+                show:
+                  datalabels: total

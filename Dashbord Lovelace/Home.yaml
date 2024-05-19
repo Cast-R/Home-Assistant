@@ -62,7 +62,7 @@ cards:
                   name: Info Tempo
                   tap_action:
                     action: navigate
-                    navigation_path: /tablette-murale/energy
+                    navigation_path: /lovelace/energy
                   styles:
                     card:
                       - background-color: null
@@ -486,7 +486,7 @@ cards:
         card:
           type: horizontal-stack
           cards:
-            - type: energy-solar-consumed-gauge #carte tazux autoconsommation
+            - type: energy-solar-consumed-gauge #carte taux autoconsommation
             - type: energy-usage-graph # carte suivi conso journalière
       - type: custom:mod-card #Ligne 5 dashbord - info dynamique
         card_mod:
@@ -661,7 +661,7 @@ cards:
                     type: button
                     tap_action:
                       action: navigate
-                      navigation_path: /tablette-murale/pronote
+                      navigation_path: /lovelace/pronote
                     icon: mdi:account-school
                     icon_height: 30px
                     name: Pronote
@@ -812,7 +812,7 @@ cards:
                                   entity: cover.volets
                                   tap_action:
                                     action: navigate
-                                    navigation_path: /tablette-murale/volet
+                                    navigation_path: /locelace/volet
                                   layout: icon_label
                                   label: |
                                     [[[
@@ -867,7 +867,7 @@ cards:
                                       type: button
                                       tap_action:
                                         action: navigate
-                                        navigation_path: /tablette-murale/volet
+                                        navigation_path: /lovelace/volet
                                       name: Paramétrage volet
                                       icon: mdi:window-shutter-cog
                 - type: conditional # affichage calendrier
