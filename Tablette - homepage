@@ -710,7 +710,7 @@ cards:
                               size: 40px
                             - type: horizontal-stack
                               cards:
-                                - show_name: true
+                                - show_name: true # Lumières led TV via prise connectée
                                   show_icon: true
                                   type: button
                                   tap_action:
@@ -718,15 +718,15 @@ cards:
                                   entity: switch.led_tv
                                   icon: mdi:led-strip-variant
                                   show_state: false
-                                - show_name: true
+                                - show_name: true # lumière cheminée 
                                   show_icon: true
                                   type: button
                                   tap_action:
                                     action: toggle
                                   entity: switch.prise_cheminee
                                   icon: mdi:floor-lamp
-                                - type: custom:slider-button-card
-                                  entity: light.led_vitrine
+                                - type: custom:slider-button-card # Eclairage Vitrine
+                                  entity: light.ikea_of_sweden_tradfri_driver_10w_lumiere
                                   slider:
                                     direction: left-right
                                     background: gradient
@@ -737,6 +737,7 @@ cards:
                                     force_square: false
                                     show_attribute: false
                                   show_name: true
+                                  name: Vitrine
                                   show_state: true
                                   compact: false
                                   icon:
