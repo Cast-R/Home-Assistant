@@ -1,0 +1,403 @@
+# page d'accueil
+theme: Backend-selected
+path: default_view
+title: Home
+icon: mdi:home
+visible:
+  - user: 1e2730bfe88d4aaf898490072790c95d
+  - user: 7e712d47fd724a8396e12cb681c67504
+  - user: c97ee60b358e46eaa49ea88cba407be7
+  - user: 533c46312f8d4072945945d4953f0084
+cards:
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            color_type: icon
+            entity: input_boolean.active_surveillance
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/surveillance
+            layout: icon_label
+            label: |
+              [[[
+                return 'Surveillance : ' + states['input_boolean.active_surveillance'].state;
+              ]]]
+            show_label: true
+            show_name: false
+            styles:
+              card:
+                - font-size: 20px
+                - padding-top: 00px
+                - padding-bottom: 0px
+                - height: 70px
+            size: 40px
+      - type: horizontal-stack
+        cards:
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: person.ragneau
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: person.carine
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: more-info
+            entity: person.arthur
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: toggle
+            show_state: false
+            entity: input_boolean.surveillance_forcee
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            color_type: icon
+            entity: sensor.conso_domicile
+            icon: mdi:home-lightning-bolt-outline
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/7
+            layout: icon_label
+            label: |
+              [[[
+                return 'Conso : ' + states['sensor.conso_domicile'].state + 'W';
+              ]]]
+            show_label: true
+            show_name: false
+            styles:
+              card:
+                - font-size: 20px
+                - padding-top: 00px
+                - padding-bottom: 0px
+                - height: 70px
+              icon:
+                - color: |
+                    [[[
+                      if (entity.state < 0) return 'deepskyblue';
+                      if (entity.state >= 0 && entity.state < 200) return 'lime';
+                      if (entity.state >= 200 && entity.state < 500) return 'orange';
+                      else return 'red';
+                    ]]]
+            size: 40px
+      - type: custom:dual-gauge-card
+        title: Power
+        outer:
+          entity: sensor.conso_reseau_around
+          unit: w
+          label: Réseau
+          min: -10000
+          max: 10000
+          colors:
+            - color: deepskyblue
+              value: -5000
+            - color: lime
+              value: 0
+            - color: orange
+              value: 200
+            - color: red
+              value: 500
+        inner:
+          entity: sensor.prod_elec_around
+          unit: w
+          label: Prod
+          min: 0
+          max: 5000
+          colors:
+            - color: red
+              value: 100
+            - color: orange
+              value: 150
+            - color: lime
+              value: 300
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: sensor.shelly_pro_em_em0_power
+                icon: mdi:transmission-tower-export
+                aspect_ratio: 1/1
+                name: Conso Elec
+                tap_action:
+                  action: navigate
+                  navigation_path: /nest-hub/analyse-elec
+                styles:
+                  card:
+                    - background-color: null
+                    - border-radius: 10%
+                    - padding: 10%
+                    - color: ivory
+                    - font-size: 18px
+                    - text-shadow: 0px 0px 5px black
+                    - text-transform: capitalize
+                  grid:
+                    - grid-template-areas: "\"i temp\" \"n n\" \"Prod Prod\" \"ram ram\" \"sd sd\""
+                    - grid-template-columns: 1fr 1fr
+                    - grid-template-rows: 1fr min-content min-content min-content min-content
+                  name:
+                    - font-weight: bold
+                    - font-size: 13px
+                    - color: white
+                    - align-self: middle
+                    - justify-self: start
+                    - padding-bottom: 4px
+                  img_cell:
+                    - justify-content: start
+                    - align-items: start
+                    - margin: none
+                  icon:
+                    - color: |
+                        [[[
+                          if (entity.state < 0) return 'deepskyblue';
+                          if (entity.state >= 0 && entity.state < 200) return 'lime';
+                          if (entity.state >= 200 && entity.state < 500) return 'orange';
+                          else return 'red';
+                        ]]]
+                    - width: 70%
+                    - margin-top: "-10%"
+                  custom_fields:
+                    temp:
+                      - align-self: start
+                      - justify-self: end
+                    Prod:
+                      - padding-bottom: 2px
+                      - align-self: middle
+                      - justify-self: start
+                      - "--text-color-sensor": >-
+                          [[[ if (states["sensor.tarif_hc_du_jour"].state >
+                          (states["input_number.tarif_edf_tempo_blanc_hc"].state*100))
+                          return "red"; if
+                          (states["sensor.tarif_hc_du_jour"].state <
+                          (states["input_number.tarif_edf_tempo_blanc_hc"].state*99))
+                          return "deepskyblue";]]]
+                    ram:
+                      - padding-bottom: 2px
+                      - align-self: middle
+                      - justify-self: start
+                      - "--text-color-sensor": >-
+                          [[[ if (states["sensor.tarif_hp_du_jour"].state >
+                          (states["input_number.tarif_edf_tempo_blanc_hp"].state*100))
+                          return "red"; if
+                          (states["sensor.tarif_hp_du_jour"].state <
+                          (states["input_number.tarif_edf_tempo_blanc_hp"].state*100))
+                          return "deepskyblue";]]]
+                    sd:
+                      - align-self: middle
+                      - justify-self: start
+                      - "--text-color-sensor": >-
+                          [[[ if
+                          (states["sensor.rte_tempo_prochaine_couleur_visuel"].state
+                          >80) return "red"; ]]]
+                custom_fields:
+                  temp: |
+                    [[[
+                      return `<ha-icon
+                        icon="mdi:palette"
+                        style="width: 20px; height: 20px; color: deepskyblue;">
+                        </ha-icon><span>Tempo : ${states['sensor.rte_tempo_couleur_actuelle_visuel'].state}</span>`
+                    ]]]
+                  Prod: |
+                    [[[
+                      return `<ha-icon
+                        icon="mdi:server"
+                        style="width: 20px; height: 20px; color: deepskyblue;">
+                        </ha-icon><span>HC: <span style="color: var(--text-color-sensor);">${states['sensor.tarif_hc_du_jour'].state}c€/kW</span></span>`
+                    ]]]
+                  ram: |
+                    [[[
+                      return `<ha-icon
+                        icon="mdi:transmission-tower"
+                        style="width: 20px; height: 20px; color: deepskyblue;">
+                        </ha-icon><span>HP: <span style="color: var(--text-color-sensor);">${states['sensor.tarif_hp_du_jour'].state}c€/kW</span></span>`
+                    ]]]
+                  sd: |
+                    [[[
+                      return `<ha-icon
+                        icon="mdi:palette"
+                        style="width: 20px; height: 20px; color: deepskyblue;">
+                        </ha-icon><span>Tempo J+1: <span style="color: var(--text-color-sensor);">${states['sensor.rte_tempo_prochaine_couleur_visuel'].state}</span></span>`
+                    ]]]
+              - type: vertical-stack
+                cards:
+                  - type: custom:mini-graph-card
+                    entities:
+                      - sensor.shelly_pro_em_em0_power
+                    show:
+                      labels: false
+                      name: true
+                      icon: false
+                      state: false
+                    name: Conso réseau
+                    hours_to_show: 24
+                    color_thresholds:
+                      - value: -1000
+                        color: blue
+                      - value: 0
+                        color: lime
+                      - value: 500
+                        color: orange
+                      - value: 1000
+                        color: red
+                  - type: custom:mini-graph-card
+                    entities:
+                      - sensor.solaredge_puissance_actuelle
+                    show:
+                      labels: false
+                      name: true
+                      icon: false
+                      state: false
+                    name: Production
+                    hours_to_show: 24
+                    color_thresholds:
+                      - value: 2500
+                        color: blue
+                      - value: 1500
+                        color: lime
+                      - value: 400
+                        color: orange
+                      - value: 200
+                        color: red
+  - type: vertical-stack
+    cards:
+      - type: custom:button-card
+        color_type: icon
+        entity: cover.volets
+        tap_action:
+          action: navigate
+          navigation_path: /nest-hub/prepa-volet
+        layout: icon_label
+        label: |
+          [[[
+            return 'Volets : ' + states['cover.volets'].state;
+          ]]]
+        show_label: true
+        show_name: false
+        styles:
+          card:
+            - font-size: 20px
+            - padding-top: 00px
+            - padding-bottom: 0px
+            - height: 70px
+        size: 40px
+      - type: horizontal-stack
+        cards:
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: toggle
+            entity: script.fermeture_volets
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: toggle
+            entity: script.ouverture_volet
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: call-service
+              service: cover.set_cover_position
+              target:
+                entity_id:
+                  - cover.volet_arthur_nord
+                  - cover.volet_louka_sud
+                  - cover.volet_mael_sud
+                  - cover.volet_sejour_sud
+                  - cover.volet_salon_sud
+              data:
+                position: 20
+            name: Fermeture partiel
+            icon: mdi:window-shutter-settings
+            show_state: false
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/volets
+            name: Paramétrage volet
+            icon: mdi:window-shutter-cog
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: toggle
+            entity: switch.led_tv
+            icon: mdi:led-strip-variant
+            show_state: false
+          - show_name: true
+            show_icon: true
+            type: button
+            tap_action:
+              action: toggle
+            entity: switch.prise_cheminee
+            icon: mdi:floor-lamp
+          - type: custom:slider-button-card
+            entity: light.ikea_of_sweden_tradfri_driver_10w_lumiere
+            slider:
+              direction: left-right
+              background: gradient
+              use_state_color: true
+              use_percentage_bg_opacity: false
+              show_track: false
+              toggle_on_click: false
+              force_square: false
+              show_attribute: false
+            show_name: true
+            name: Vitrines
+            show_state: true
+            compact: false
+            icon:
+              show: true
+              use_state_color: true
+              tap_action:
+                action: more-info
+              icon: mdi:mirror-rectangle
+            action_button:
+              mode: toggle
+              icon: mdi:power
+              show: true
+              show_spinner: true
+              tap_action:
+                action: toggle
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            color_type: icon
+            entity: light.lumieres_salon
+            tap_action:
+              action: toggle
+            layout: icon_label
+            label: |
+              [[[
+                return 'Lumières : ' + states['light.lumieres_salon'].state;
+              ]]]
+            show_label: true
+            show_name: false
+            styles:
+              card:
+                - font-size: 20px
+                - padding-top: 00px
+                - padding-bottom: 0px
+                - height: 70px
+            size: 40px
