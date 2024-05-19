@@ -1,0 +1,1004 @@
+type: horizontal-stack #Home page v0
+cards:
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack #Ligne 1 Dashbord
+        cards:
+          - type: markdown #Info Date
+            content: >-
+              {% set date_jour = (states('sensor.date_fr_complete')) %} {% set
+              couleur_jour =
+              (states('sensor.rte_tempo_couleur_actuelle_visuel'))%} {% set
+              couleur_j1 =
+              (states('sensor.rte_tempo_prochaine_couleur_visuel'))%}
+
+              <div> <ha-icon icon="mdi:calendar-range"></ha-icon> {{date_jour}}
+              {{now().strftime('    %Hh%M')}}  </div> 
+            card_mod:
+              style:
+                .: |
+                  ha-card ha-markdown {padding:0px}
+                  ha-card ha-markdown.no-header {padding:0px}
+                  ha-markdown {
+                      max-height: px;
+                      overflow-y: auto;
+                      border-bottom-left-radius: 10px; 
+                      border-bottom-right-radius: 10px;
+                      border-top-left-radius: 10px; 
+                      border-top-right-radius: 10px;
+                  }
+                ha-markdown$: |
+                  div{
+                      background-color: rgb(54, 54, 54, 0.3);
+                      padding: 5px 5px;
+                      color:white;
+                      font-weight:normal;
+                      text-align: center;
+                      font-size:2.7em;
+                      border-top-left-radius: 10px; 
+                      border-top-right-radius: 10px; 
+                      }
+      - type: horizontal-stack #Ligne 2 dashbord
+        cards:
+          - type: custom:mod-card
+            card_mod:
+              style:
+                hui-horizontal-stack-card $: |
+                  div#root > :first-child {
+                    width: 30%;
+                    flex: auto; 
+                  }
+                  div#root > :last-child {
+                    width: 70%;
+                    flex: auto; 
+                  }
+            card:
+              type: horizontal-stack
+              cards:
+                - type: custom:button-card #Info Tempo
+                  entity: sensor.shelly_pro_em_em0_power
+                  icon: mdi:transmission-tower-export
+                  aspect_ratio: 3/3
+                  name: Info Tempo
+                  tap_action:
+                    action: navigate
+                    navigation_path: /tablette-murale/energy
+                  styles:
+                    card:
+                      - background-color: null
+                      - border-radius: 5%
+                      - padding: 5%
+                      - color: ivory
+                      - font-size: 18px
+                      - text-shadow: px 0px 5px black
+                      - text-transform: capitalize
+                      - height: 265px
+                    grid:
+                      - grid-template-areas: '"i" "n" "Tempo1" "HC" "HP" "Tempo2"'
+                      - grid-template-columns: 1fr
+                      - grid-template-rows: >-
+                          1fr min-content min-content min-content min-content
+                          min-content
+                    name:
+                      - font-weight: bold
+                      - font-size: 20px
+                      - color: white
+                      - align-self: start
+                      - justify-self: start
+                      - padding-bottom: 4px
+                    img_cell:
+                      - justify-content: start
+                      - align-items: start
+                      - margin: none
+                    icon:
+                      - color: |
+                          [[[
+                            if (entity.state < 0) return 'deepskyblue';
+                            if (entity.state >= 0 && entity.state < 250) return 'lime';
+                            if (entity.state >= 250 && entity.state < 500) return 'green';
+                            if (entity.state >= 500 && entity.state < 2000) return 'yellow';
+                            if (entity.state >= 2000 && entity.state < 3000) return 'orange';
+                            else return 'red';
+                          ]]]
+                      - width: 70%
+                      - margin-top: +00%
+                    custom_fields:
+                      Tempo1:
+                        - align-self: middle
+                        - justify-self: start
+                        - '--text-color-sensor': >-
+                            [[[ if
+                            (states["sensor.rte_tempo_couleur_actuelle_visuel"].state
+                            >80) return "red"; ]]]
+                      HC:
+                        - padding-bottom: 2px
+                        - align-self: middle
+                        - justify-self: end
+                        - '--text-color-sensor': >-
+                            [[[ if (states["sensor.tarif_hc_du_jour"].state >
+                            (states["input_number.tarif_edf_tempo_blanc_hc"].state*100))
+                            return "red"; if
+                            (states["sensor.tarif_hc_du_jour"].state <
+                            (states["input_number.tarif_edf_tempo_blanc_hc"].state*99))
+                            return "deepskyblue";]]]
+                      HP:
+                        - padding-bottom: 2px
+                        - align-self: middle
+                        - justify-self: end
+                        - '--text-color-sensor': >-
+                            [[[ if (states["sensor.tarif_hp_du_jour"].state >
+                            (states["input_number.tarif_edf_tempo_blanc_hp"].state*100))
+                            return "red"; if
+                            (states["sensor.tarif_hp_du_jour"].state <
+                            (states["input_number.tarif_edf_tempo_blanc_hp"].state*100))
+                            return "deepskyblue";]]]
+                      Tempo2:
+                        - align-self: middle
+                        - justify-self: start
+                        - '--text-color-sensor': >-
+                            [[[ if
+                            (states["sensor.rte_tempo_prochaine_couleur_visuel"].state
+                            >80) return "red"; ]]]
+                  custom_fields:
+                    Tempo1: |
+                      [[[
+                        return `<ha-icon
+                          icon="mdi:palette"
+                          style="width: 20px; height: 20px; color: deepskyblue;">
+                          </ha-icon><span>Tempo : <span style="color: var(--text-color-sensor);">${states['sensor.rte_tempo_couleur_actuelle_visuel'].state}</span></span>`
+                      ]]]
+                    HC: |
+                      [[[
+                        return `<ha-icon
+                          icon="mdi:server"
+                          style="width: 20px; height: 20px; color: deepskyblue;">
+                          </ha-icon><span>HC: <span style="color: var(--text-color-sensor);">${states['sensor.tarif_hc_du_jour'].state}c€/kW</span></span>`
+                      ]]]
+                    HP: |
+                      [[[
+                        return `<ha-icon
+                          icon="mdi:transmission-tower"
+                          style="width: 20px; height: 20px; color: deepskyblue;">
+                          </ha-icon><span>HP: <span style="color: var(--text-color-sensor);">${states['sensor.tarif_hp_du_jour'].state}c€/kW</span></span>`
+                      ]]]
+                    Tempo2: |
+                      [[[
+                        return `<ha-icon
+                          icon="mdi:palette"
+                          style="width: 20px; height: 20px; color: deepskyblue;">
+                          </ha-icon><span>Tempo J+1: <span style="color: var(--text-color-sensor);">${states['sensor.rte_tempo_prochaine_couleur_visuel'].state}</span></span>`
+                      ]]]
+                - type: custom:power-flow-card-plus #Flow production
+                  full_size: false
+                  entities:
+                    battery: {}
+                    solar:
+                      display_zero_state: true
+                      entity: sensor.prod_elec
+                    grid:
+                      entity: sensor.shelly_pro_em_em0_power
+                      name: EDF
+                    fossil_fuel_percentage:
+                      icon: mdi:pine-tree
+                      color_icon: true
+                      display_zero: false
+                      name: Non Fossil
+                      secondary_info: {}
+                      state_type: percentage
+                      unit_white_space: true
+                      use_metadata: false
+                      entity: >-
+                        sensor.electricity_maps_pourcentage_d_energies_fossiles_du_reseau
+                      color:
+                        - 80
+                        - 136
+                        - 204
+                  clickable_entities: false
+                  display_zero_lines:
+                    mode: show
+                    transparency: 50
+                    grey_color:
+                      - 189
+                      - 189
+                      - 189
+                  use_new_flow_rate_model: true
+                  w_decimals: 0
+                  kw_decimals: 1
+                  min_flow_rate: 0.75
+                  max_flow_rate: 6
+                  max_expected_power: 9000
+                  min_expected_power: 0.01
+                  watt_threshold: 1000
+                  transparency_zero_lines: 0
+                  disable_dots: false
+                  dashboard_link: ''
+      - type: custom:mod-card #Ligne 3 dashbord info reseau et prod
+        card_mod:
+          style:
+            hui-horizontal-stack-card $: |
+              div#root > :first-child {
+                width: 50%;
+                flex: auto; 
+              }
+              div#root > :last-child {
+                width: 50%;
+                flex: auto; 
+        card:
+          type: horizontal-stack
+          cards:
+            - type: custom:stack-in-card #Info Réseau
+              title: []
+              cards:
+                - type: custom:bar-card
+                  entities:
+                    - entity: sensor.shelly_pro_em_em0_power
+                      name: Réseau
+                  align: split
+                  columns: 1
+                  height: 24px
+                  width: 70%
+                  icon: mdi:lightning-bolt
+                  animation:
+                    state: 'on'
+                    speed: 2
+                  attribute: null
+                  color: white
+                  decimal: 0
+                  direction: right
+                  positions:
+                    icon: 'off'
+                    indicator: inside
+                    name: inside
+                    minmax: 'off'
+                    value: inside
+                  unit_of_measurement: W
+                  max: 9000
+                  min: -5000
+                  severity:
+                    - color: deepskyblue
+                      from: '-5000'
+                      to: '0'
+                    - color: lime
+                      from: '1'
+                      to: '250'
+                    - color: green
+                      from: '251'
+                      to: '500'
+                    - color: yellow
+                      from: '501'
+                      to: '2000'
+                    - color: orange
+                      from: '2001'
+                      to: '3000'
+                    - color: red
+                      from: '3001'
+                      to: '9000'
+                  card_mod:
+                    style: |
+                      ha-card { 
+                        --paper-item-icon-color: rgb(47,186,229);
+                        border-radius: 2.5px;
+                        border-width: 0px !important;
+                        background: none;
+                        border: none;
+                        height: 38px;
+                        
+                         }
+                      ha-icon { 
+                        margin-top: -40px;
+                        padding-right: 25px; 
+                         }  
+                      bar-card-indicator { 
+                        margin-top: -10px;
+                        padding-right: 0px; 
+                        
+                         }  
+                      bar-card-name { 
+                        margin-top: 0px; 
+                        padding-left: 0px; 
+                         }  
+                      bar-card-backgroundbar { 
+                        margin-top: 22px;
+                        border-radius: 2.5px; 
+                         } 
+                      bar-card-currentbar { 
+                        margin-top: 22px; 
+                        border-radius: 2.5px; 
+                        
+                         } 
+                      bar-card-targetbar { 
+                        margin-top: 22px; 
+                        border-radius: 2.5px; 
+                        
+                         } 
+                      bar-card-animationbar { 
+                        background: linear-gradient(to right, red 1%, orange 5%, yellow 7.5%, green 25%, green 35%, lime 45%, lime 60%, deepskyblue 80% );
+                        margin-top: 22px;  
+                        padding-right: 0px; 
+                        border-radius: 5px;          
+                         } 
+                      bar-card-targetmarker { 
+                        margin-top: 40px; 
+                        border-radius: 2.5px; 
+                        
+                         } 
+                      bar-card-value { 
+                        margin-top: 0px; 
+                        padding-left: 5px; 
+                        
+                         } 
+                      bar-card-row {
+                        margin-bottom: 0px !important; 
+                        margin-top: -10px !important;
+                        
+                         }  
+
+                      bar-card-contentbar { 
+                        font-size: 14px; color: white; 
+                        
+                         } 
+                      bar-card-value  { 
+                        font-size: 24px; color: white; 
+                        
+                         }        
+              card_mod:
+                style: |
+                  ha-card {
+                    height: 55px;    
+                    border: 0px;
+                    background: transparent;
+                    
+                  }
+            - type: custom:stack-in-card #Info Prod
+              title: []
+              cards:
+                - type: custom:bar-card
+                  entities:
+                    - entity: sensor.shelly_pro_em_em1_power
+                      name: Production
+                  align: split
+                  columns: 1
+                  height: 24px
+                  width: 70%
+                  icon: mdi:lightning-bolt
+                  animation:
+                    state: 'on'
+                    speed: 2
+                  attribute: null
+                  color: white
+                  decimal: 0
+                  direction: right
+                  positions:
+                    icon: 'off'
+                    indicator: inside
+                    name: inside
+                    minmax: 'off'
+                    value: inside
+                  unit_of_measurement: W
+                  max: 5000
+                  min: 0
+                  severity:
+                    - color: red
+                      from: '0'
+                      to: '50'
+                    - color: orange
+                      from: '51'
+                      to: '250'
+                    - color: yellow
+                      from: '251'
+                      to: '500'
+                    - color: green
+                      from: '501'
+                      to: '2000'
+                    - color: lime
+                      from: '2001'
+                      to: '3000'
+                    - color: deepskyblue
+                      from: '3001'
+                      to: '5000'
+                  card_mod:
+                    style: |
+                      ha-card { 
+                        --paper-item-icon-color: rgb(47,186,229);
+                        border-radius: 2.5px;
+                        border-width: 0px !important;
+                        background: none;
+                        border: none;
+                        height: 38px;
+                        
+                         }
+                      ha-icon { 
+                        margin-top: -40px;
+                        padding-right: 25px; 
+                         }  
+                      bar-card-indicator { 
+                        margin-top: -10px;
+                        padding-right: 0px; 
+                        
+                         }  
+                      bar-card-name { 
+                        margin-top: 0px; 
+                        padding-left: 0px; 
+                         }  
+                      bar-card-backgroundbar { 
+                        margin-top: 22px;
+                        border-radius: 2.5px; 
+                         } 
+                      bar-card-currentbar { 
+                        margin-top: 22px; 
+                        border-radius: 2.5px; 
+                        
+                         } 
+                      bar-card-targetbar { 
+                        margin-top: 22px; 
+                        border-radius: 2.5px; 
+                        
+                         } 
+                      bar-card-animationbar { 
+                        background: linear-gradient(to right, red 1%, orange 5%, yellow 7.5%, green 25%, green 35%, lime 45%, lime 60%, deepskyblue 80% );
+                        margin-top: 22px;  
+                        padding-right: 0px; 
+                        border-radius: 5px;          
+                         } 
+                      bar-card-targetmarker { 
+                        margin-top: 40px; 
+                        border-radius: 2.5px; 
+                        
+                         } 
+                      bar-card-value { 
+                        margin-top: 0px; 
+                        padding-left: 5px; 
+                        
+                         } 
+                      bar-card-row {
+                        margin-bottom: 0px !important; 
+                        margin-top: -10px !important;
+                        
+                         }  
+
+                      bar-card-contentbar { 
+                        font-size: 14px; color: white; 
+                        
+                         } 
+                      bar-card-value  { 
+                        font-size: 24px; color: white; 
+                        
+                         }        
+              card_mod:
+                style: |
+                  ha-card {
+                    height: 55px;    
+                    border: 0px;
+                    background: transparent;
+                    
+                  }
+      - type: custom:mod-card #Ligne 4 dashbord - suivi autoconso et histo jour
+        card_mod:
+          style:
+            hui-horizontal-stack-card $: |
+              div#root > :first-child {
+                width: 30%;
+                flex: auto; 
+              }
+              div#root > :last-child {
+                width: 70%;
+                flex: auto; 
+        card:
+          type: horizontal-stack
+          cards:
+            - type: energy-solar-consumed-gauge #carte tazux autoconsommation
+            - type: energy-usage-graph # carte suivi conso journalière
+      - type: custom:mod-card #Ligne 5 dashbord - info dynamique
+        card_mod:
+          style:
+            hui-horizontal-stack-card $: |
+              div#root > :first-child {
+                width: 25%;
+                flex: auto; 
+              }
+              div#root > :last-child {
+                width: 75%;
+                flex: auto; 
+              }
+        card:
+          type: horizontal-stack # ligne 5 dashbord
+          cards:
+            - type: vertical-stack # ligne 5 colonne Gauche
+              cards:
+                - event_grouping: true # Carte poubelle
+                  drop_todayevents_from: '23:00:00'
+                  next_days: 1
+                  pattern:
+                    - icon: mdi:flower
+                      color: lime
+                      type: organic
+                    - icon: mdi:newspaper
+                      color: blue
+                      type: paper
+                    - icon: mdi:recycle-variant
+                      color: amber
+                      type: recycle
+                      pattern: Recyclage
+                    - icon: mdi:trash-can-outline
+                      color: green
+                      type: waste
+                      pattern: Déchets
+                    - icon: mdi:dump-truck
+                      color: purple
+                      type: others
+                  card_style: icon
+                  alignment_style: left
+                  items_per_row: 1
+                  refresh_rate: 60
+                  with_label: true
+                  type: custom:trash-card
+                  entities:
+                    - calendar.ramassage_ordures_menageres
+                  filter_events: false
+                  full_size: false
+                - show_name: false # bouton selection affichage
+                  show_icon: true
+                  type: button
+                  entity: input_select.affichage_menu_select
+                  show_state: true
+                  icon_height: 40px
+                  icon: mdi:menu
+                  tap_action:
+                    action: call-service
+                    service: input_select.select_next
+                    target:
+                      entity_id: input_select.affichage_menu_select
+                    data:
+                      cycle: true
+                - type: conditional # affichage surveillance
+                  conditions:
+                    - condition: state
+                      entity: input_select.affichage_menu_select
+                      state: Surveillance
+                  card:
+                    type: vertical-stack
+                    cards:
+                      - type: custom:button-card #info surveillance
+                        icon: mdi:shield-home
+                        aspect_ratio: 4/3
+                        name: Surveillance
+                        tap_action:
+                          action: call-service
+                          service: input_select.select_next
+                          target:
+                            entity_id: input_boolean.surveillance_forcee
+                        entity: input_boolean.surveillance_forcee
+                        styles:
+                          card:
+                            - background-color: null
+                            - border-radius: 5%
+                            - padding: 5%
+                            - color: ivory
+                            - font-size: 18px
+                            - text-shadow: px 0px 5px black
+                            - text-transform: capitalize
+                            - height: 185px
+                          grid:
+                            - grid-template-areas: '"i" "n" "Seb" "Carine" "S_Forcée" "autre"'
+                            - grid-template-columns: 1fr
+                            - grid-template-rows: >-
+                                1fr min-content min-content min-content
+                                min-content min-content
+                          name:
+                            - font-weight: bold
+                            - font-size: 20px
+                            - color: white
+                            - align-self: start
+                            - justify-self: start
+                            - padding-bottom: 4px
+                          img_cell:
+                            - justify-content: start
+                            - align-items: start
+                            - margin: none
+                            - width: 70%
+                            - margin-top: +00%
+                          icon:
+                            - color: |
+                                [[[
+                                  if (states['input_boolean.surveillance_forcee'].state = 'off' ) return 'white';
+                                  if (states['input_boolean.surveillance_forcee'].state = 'on') return 'orange' ;
+                                ]]]
+                          custom_fields:
+                            Seb:
+                              - align-self: middle
+                              - justify-self: start
+                              - '--text-color-sensor': >-
+                                  [[[ if (states["person.ragneau"].state !=
+                                  "home") return "red"; if
+                                  (states["person.ragneau"].state ="home")
+                                  return "lime"; ]]]
+                            Carine:
+                              - align-self: middle
+                              - justify-self: start
+                              - '--text-color-sensor': >-
+                                  [[[ if (states["person.carine"].state !=
+                                  "home") return "red"; if
+                                  (states["person.ragneau"].state ="home")
+                                  return "lime"; ]]]
+                            S_Forcée:
+                              - padding-bottom: 2px
+                              - align-self: middle
+                              - justify-self: start
+                              - '--text-color-sensor': >-
+                                  [[[ if
+                                  (states["input_boolean.surveillance_forcee"].state
+                                  = "On") return "red"]]]
+                        custom_fields:
+                          Seb: |
+                            [[[
+                              return `<ha-icon
+                                icon="mdi:map-marker-check"
+                                style="width: 20px; height: 20px; color: deepskyblue;">
+                                </ha-icon><span>Seb : <span style="color: var(--text-color-sensor);">${states['person.ragneau'].state}</span></span>`
+                            ]]]
+                          Carine: |
+                            [[[
+                              return `<ha-icon
+                                icon="mdi:map-marker-check"
+                                style="width: 20px; height: 20px; color: deepskyblue;">
+                                </ha-icon><span>Carine : <span style="color: var(--text-color-sensor);">${states['person.carine'].state}</span></span>`
+                            ]]]
+                          S_Forcée: |
+                            [[[
+                              return `<ha-icon
+                                icon="mdi:shield-lock"
+                                style="width: 20px; height: 20px; color: deepskyblue;">
+                                </ha-icon><span>Forcée: <span style="color: var(--text-color-sensor);">${states['input_boolean.surveillance_forcee'].state}</span></span>`
+                            ]]]
+                - type: conditional # affichage Pronote
+                  conditions:
+                    - condition: state
+                      entity: input_select.affichage_menu_select
+                      state: Pronote
+                  card:
+                    show_name: true
+                    show_icon: true
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: /tablette-murale/pronote
+                    icon: mdi:account-school
+                    icon_height: 30px
+                    name: Pronote
+            - type: vertical-stack # ligne 5 colonne Droite
+              cards:
+                - type: conditional # affichage Lumière
+                  conditions:
+                    - condition: state
+                      entity: input_select.affichage_menu_select
+                      state: Lumières
+                  card:
+                    type: custom:mod-card
+                    card_mod:
+                      style:
+                        hui-horizontal-stack-card $: |
+                          div#root > :first-child {
+                            width: 40%;
+                            flex: auto; 
+                          }
+                          div#root > :last-child {
+                            width: 60%;
+                            flex: auto; 
+                    card:
+                      type: horizontal-stack
+                      cards:
+                        - type: vertical-stack
+                          cards:
+                            - type: custom:button-card
+                              color_type: icon
+                              entity: light.lumieres_salon
+                              tap_action:
+                                action: toggle
+                              layout: icon_label
+                              label: |
+                                [[[
+                                  return 'Lumières : ' + states['light.lumieres_salon'].state;
+                                ]]]
+                              show_label: true
+                              show_name: false
+                              styles:
+                                card:
+                                  - font-size: 25px
+                                  - padding-top: 00px
+                                  - padding-bottom: 0px
+                                  - height: 100px
+                              size: 40px
+                            - type: horizontal-stack
+                              cards:
+                                - show_name: true # Lumières led TV via prise connectée
+                                  show_icon: true
+                                  type: button
+                                  tap_action:
+                                    action: toggle
+                                  entity: switch.led_tv
+                                  icon: mdi:led-strip-variant
+                                  show_state: false
+                                - show_name: true # lumière cheminée 
+                                  show_icon: true
+                                  type: button
+                                  tap_action:
+                                    action: toggle
+                                  entity: switch.prise_cheminee
+                                  icon: mdi:floor-lamp
+                                - type: custom:slider-button-card # Eclairage Vitrine
+                                  entity: light.ikea_of_sweden_tradfri_driver_10w_lumiere
+                                  slider:
+                                    direction: left-right
+                                    background: gradient
+                                    use_state_color: true
+                                    use_percentage_bg_opacity: false
+                                    show_track: false
+                                    toggle_on_click: false
+                                    force_square: false
+                                    show_attribute: false
+                                  show_name: true
+                                  name: Vitrine
+                                  show_state: true
+                                  compact: false
+                                  icon:
+                                    show: true
+                                    use_state_color: true
+                                    tap_action:
+                                      action: more-info
+                                    icon: mdi:mirror-rectangle
+                                  action_button:
+                                    mode: toggle
+                                    icon: mdi:power
+                                    show: true
+                                    show_spinner: true
+                                    tap_action:
+                                      action: toggle
+                - type: conditional # affichage camera surveillance
+                  conditions:
+                    - condition: state
+                      entity: input_select.affichage_menu_select
+                      state: Surveillance
+                  card:
+                    type: custom:mod-card
+                    card_mod:
+                      style:
+                        hui-horizontal-stack-card $: |
+                          div#root > :first-child {
+                            width: 30%;
+                            flex: auto; 
+                          }
+                          div#root > :last-child {
+                            width: 70%;
+                            flex: auto; 
+                    card:
+                      type: horizontal-stack
+                      cards:
+                        - camera_view: live
+                          type: picture-glance
+                          title: Cam ext 1
+                          entities:
+                            - entity: select.camera_ext_1_floodlight_mode
+                            - entity: select.camera_ext_1_ptz_preset
+                          camera_image: camera.camera_ext_1_sub_lens_0
+                          tap_action:
+                            action: navigate
+                            navigation_path: /tablette-murale/surveillance
+                - type: conditional # affichage commandes volets
+                  conditions:
+                    - condition: state
+                      entity: input_select.affichage_menu_select
+                      state: Volets
+                  card:
+                    type: custom:mod-card
+                    card_mod:
+                      style:
+                        hui-horizontal-stack-card $: |
+                          div#root > :first-child {
+                            width: 40%;
+                            flex: auto; 
+                          }
+                          div#root > :last-child {
+                            width: 60%;
+                            flex: auto; 
+                    card:
+                      type: horizontal-stack
+                      cards:
+                        - type: vertical-stack
+                          cards:
+                            - type: vertical-stack
+                              cards:
+                                - type: custom:button-card
+                                  color_type: icon
+                                  entity: cover.volets
+                                  tap_action:
+                                    action: navigate
+                                    navigation_path: /tablette-murale/volet
+                                  layout: icon_label
+                                  label: |
+                                    [[[
+                                      return 'Volets : ' + states['cover.volets'].state;
+                                    ]]]
+                                  show_label: true
+                                  show_name: false
+                                  styles:
+                                    card:
+                                      - font-size: 25px
+                                      - padding-top: 00px
+                                      - padding-bottom: 0px
+                                      - height: 100px
+                                  size: 40px
+                                - type: horizontal-stack
+                                  cards:
+                                    - show_name: true
+                                      show_icon: true
+                                      type: button
+                                      tap_action:
+                                        action: toggle
+                                      entity: script.ouverture_volet
+                                      name: Ouverture
+                                    - show_name: true
+                                      show_icon: true
+                                      type: button
+                                      tap_action:
+                                        action: call-service
+                                        service: cover.set_cover_position
+                                        target:
+                                          entity_id:
+                                            - cover.volet_arthur_nord
+                                            - cover.volet_louka_sud
+                                            - cover.volet_mael_sud
+                                            - cover.volet_sejour_sud
+                                            - cover.volet_salon_sud
+                                            - cover.volet_chambre_est
+                                        data:
+                                          position: 20
+                                      name: Fermeture partiel
+                                      icon: mdi:window-shutter-settings
+                                      show_state: false
+                                    - show_name: true
+                                      show_icon: true
+                                      type: button
+                                      tap_action:
+                                        action: toggle
+                                      entity: script.fermeture_volets
+                                      name: Fermeture
+                                    - show_name: true
+                                      show_icon: true
+                                      type: button
+                                      tap_action:
+                                        action: navigate
+                                        navigation_path: /tablette-murale/volet
+                                      name: Paramétrage volet
+                                      icon: mdi:window-shutter-cog
+                - type: conditional # affichage calendrier
+                  conditions:
+                    - condition: state
+                      entity: input_select.affichage_menu_select
+                      state: Agenda
+                  card:
+                    initial_view: listWeek
+                    type: calendar
+                    entities:
+                      - calendar.famille
+                      - calendar.ramassage_ordures_menageres
+                - type: conditional # affichage agenda pronote
+                  conditions:
+                    - condition: state
+                      entity: input_select.affichage_menu_select
+                      state: Pronote
+                  card:
+                    type: markdown
+                    content: >
+                      <div>{% set items =
+                      state_attr('sensor.pronote_ragneau_arthur_timetable_today','lessons')
+                      %}📆 Emploi du temps du :
+                      {{as_timestamp(items[0].start_at) | int
+                      |timestamp_custom('%d/%m/%Y', true)}}</div> 
+                        <table>   
+                          {% for i in range(0,items | count, 1) %}  
+                        <tr>  
+                          {%- if items[i].canceled != True -%}  
+                          <td width='12%'>
+                            <mark>{{ items[i].start_time}}</mark>
+                          </td>  
+                          <td>
+                            <mark>{{items[i].end_time }}</mark>
+                          </td>
+                          <td>{{ items[i].lesson }} {% else %}
+                            <td>
+                              <del>{{ items[i].start_time }}</del>
+                            </td> 
+                            <td>
+                              <del>{{ items[i].end_time}}</del>
+                            </td>
+                            <td>
+                              <del>{{ items[i].lesson }}</del>&emsp;{%- endif -%}{% if items[i].status!= None %} 
+                              <br><span>{{ items[i].status }}</span>
+                            </td> 
+                              {% endif %} <td>
+                          </tr> {% endfor %} 
+                          </table> 
+                    card_mod:
+                      style:
+                        .: |
+                          ha-card ha-markdown {
+                            padding:0px
+                          }
+                          ha-card ha-markdown.no-header {
+                            padding:0px
+                          }
+                          ha-markdown {
+                              max-height: 500px;
+                              overflow-y: auto;
+                              border-bottom-left-radius: 10px; 
+                              border-bottom-right-radius: 10px;
+                              border-top-left-radius: 10px; 
+                              border-top-right-radius: 10px;
+                            }
+                        ha-markdown$: |
+                          div {
+                              background-color:rgb(54, 54, 54, 0.3);
+                              padding: 5px 5px;
+                              color:white;
+                              font-weight:normal;
+                              font-size:1.2em;
+                              border-top-left-radius: 10px; 
+                              border-top-right-radius: 10px; 
+                              text-align: center;
+                          }
+                          table{
+                            border-collapse: collapse;
+                            font-size: 0.7em;
+                            font-family: Roboto;
+                            width: 100%;
+                            outline: 0px solid #393c3d;
+                            margin-top:5px
+                          } caption {
+                              font-weight: bold;
+                              font-size: 1.2em;
+                          } td {
+                              padding: 5px 8px 5px 8px;
+                              text-align: left;
+                              border-bottom: 0px solid #1c2020;
+                          }
+                          tr {
+                              border-bottom: 0px solid #1c2020;
+                          }
+
+                          tr:nth-of-type(even) {
+                              background-color: rgb(54, 54, 54, 0.3);
+                          }
+                          tr:last-of-type {
+                              border-bottom: transparent;          }
+                          mark {
+                              background: #00E199 ;
+                              color: #222627;
+                              border-radius: 5px;
+                              padding: 5px;
+                              border: solid #008d60 2px;
+                          }
+                          h1 {
+                              background: white;
+                              color: black;
+                              border-radius: 5px;
+                              padding: 5px;
+                              font-size: 0.7em;
+                              font-weight:normal;
+                              text-align: center; 
+                              border: solid #E5E2E1 2px;
+                          }
+                          class {
+                              background: #00E199;
+                              color: #222627;
+                              border-radius: 10px;
+                              padding: 5px;
+                          }
+                          span {
+                              background: #EC4B34;
+                              color: #222627;
+                              border-radius: 5px;
+                              padding: 5px;
+                          }
+                          tr:nth-child(n+2) > td:nth-child(2) {
+                            text-align: left;
+                          }
