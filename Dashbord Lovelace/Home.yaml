@@ -812,7 +812,7 @@ cards:
                                   entity: cover.volets
                                   tap_action:
                                     action: navigate
-                                    navigation_path: /locelace/volet
+                                    navigation_path: /locelace/volets
                                   layout: icon_label
                                   label: |
                                     [[[
