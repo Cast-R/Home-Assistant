@@ -665,6 +665,22 @@ cards:
                     icon: mdi:account-school
                     icon_height: 30px
                     name: Pronote
+                - type: conditional # affichage Volets
+                  conditions:
+                    - condition: state
+                      entity: input_select.affichage_menu_select
+                      state: Volets
+                  card:
+                    show_name: true
+                    show_icon: true
+                    type: button
+                    tap_action:
+                      action: navigate
+                      navigation_path: /lovelace/volets
+                    icon: mdi:window-shutter-cog
+                    icon_height: 30px
+                    name: Menu Volets
+                                
             - type: vertical-stack # ligne 5 colonne Droite
               cards:
                 - type: conditional # affichage Lumière
@@ -807,26 +823,26 @@ cards:
                           cards:
                             - type: vertical-stack
                               cards:
-                                - type: custom:button-card
-                                  color_type: icon
-                                  entity: cover.volets
-                                  tap_action:
-                                    action: navigate
-                                    navigation_path: /locelace/volets
-                                  layout: icon_label
-                                  label: |
-                                    [[[
-                                      return 'Volets : ' + states['cover.volets'].state;
-                                    ]]]
-                                  show_label: true
-                                  show_name: false
-                                  styles:
-                                    card:
-                                      - font-size: 25px
-                                      - padding-top: 00px
-                                      - padding-bottom: 0px
-                                      - height: 100px
-                                  size: 40px
+                                #- type: custom:button-card
+                                #  color_type: icon
+                                #  entity: cover.volets
+                                #  tap_action:
+                                #    action: navigate
+                                #    navigation_path: /locelace/volets
+                                #  layout: icon_label
+                                #  label: |
+                                #    [[[
+                                #      return 'Volets : ' + states['cover.volets'].state;
+                                #    ]]]
+                                #  show_label: true
+                                #  show_name: false
+                                #  styles:
+                                #    card:
+                                #      - font-size: 25px
+                                #      - padding-top: 00px
+                                #      - padding-bottom: 0px
+                                #      - height: 100px
+                                #  size: 40px
                                 - type: horizontal-stack
                                   cards:
                                     - show_name: true
@@ -862,14 +878,14 @@ cards:
                                         action: toggle
                                       entity: script.fermeture_volets
                                       name: Fermeture
-                                    - show_name: true
-                                      show_icon: true
-                                      type: button
-                                      tap_action:
-                                        action: navigate
-                                        navigation_path: /lovelace/volet
-                                      name: Paramétrage volet
-                                      icon: mdi:window-shutter-cog
+                                    #- show_name: true
+                                    #  show_icon: true
+                                    #  type: button
+                                    #  tap_action:
+                                    #    action: navigate
+                                    #    navigation_path: /lovelace/volets
+                                    #  name: Paramétrage volet
+                                    #  icon: mdi:window-shutter-cog
                 - type: conditional # affichage calendrier
                   conditions:
                     - condition: state
