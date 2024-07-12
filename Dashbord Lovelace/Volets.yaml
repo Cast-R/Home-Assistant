@@ -1,0 +1,699 @@
+type: vertical-stack
+cards:
+#-------------- reglage proportions-----------
+  - type: custom:mod-card
+    card_mod:
+      style:
+        hui-horizontal-stack-card $: |
+          div#root > :first-child > * {
+            width: 25%;
+            flex: auto; 
+          }
+          div#root > :last-child > * {
+            width: 75%;
+            flex: auto; 
+          }
+    card:
+
+      type: horizontal-stack
+      cards:
+#-------------- Boutons Gauche -----------------
+        - type: vertical-stack
+
+          cards:
+  #----------- Bouton retour menu ---------
+            - show_name: true
+              show_icon: true
+              type: button
+              tap_action:
+                action: navigate
+                navigation_path: /lovelace/home
+              name: Accueil
+              icon: mdi:home
+  # ---------------- Bouton choix Manoeuvre ou paramètres -----------------
+            - show_name: false
+              show_icon: true
+              type: button
+              entity: input_select.affichage_volet_select
+              show_state: true
+              icon_height: 40px
+              icon: mdi:menu
+              tap_action:
+                action: call-service
+                service: input_select.select_next
+                target:
+                  entity_id: input_select.affichage_volet_select
+                data:
+                  cycle: true
+  # ---------------- Bouton choix zone volet -----------------
+            - show_name: false
+              show_icon: true
+              type: button
+              entity: input_select.affichage_zone_volet_select
+              show_state: true
+              icon_height: 40px
+              icon: mdi:menu
+              tap_action:
+                action: call-service
+                service: input_select.select_next
+                target:
+                  entity_id: input_select.affichage_zone_volet_select
+                data:
+                  cycle: true
+#-------------- Boutons Droite -----------------           
+        - type: vertical-stack
+          cards:
+            #---------- ligne 2 - Pièces de vie
+            - type: horizontal-stack
+              cards:
+                - type: horizontal-stack
+                  cards:
+                    - type: horizontal-stack
+                      cards:
+                        # bouton groupe volet
+                        - type: custom:slider-button-card
+                          entity: cover.volets_sejour
+                          slider:
+                            direction: top-bottom
+                            background: gradient
+                            use_state_color: false
+                            use_percentage_bg_opacity: false
+                            toggle_on_click: false
+                            show_track: false
+                            force_square: false
+                            invert: true
+                            show_attribute: false
+                          show_name: true
+                          show_state: true
+                          compact: false
+                          icon:
+                            show: false
+                            use_state_color: true
+                            tap_action:
+                              action: more-info
+                            icon: ''
+                          action_button:
+                            mode: custom
+                            show: false
+                            show_spinner: true
+                            tap_action:
+                              action: call-service
+                              service: cover.set_cover_position
+                              target:
+                                entity_id:
+                                  - cover.volet_cuisine
+                                  - cover.volet_sejour_ouest
+                                  - cover.volet_sejour_sud
+                                  - cover.volet_salon_sud
+                                  - cover.volet_pallier_ouest
+                              data:
+                                position: 20
+                            icon: mdi:weather-sunset-up
+                          name: Pièces de vie
+                          show_attribute: true
+                        - type: vertical-stack
+                          cards:
+                            # bouton séjour Ouest
+                            - show_name: false
+                              show_icon: true
+                              type: button
+                              tap_action:
+                                action: toggle
+                              icon: mdi:weather-sunset-up
+                              hold_action:
+                                action: call-service
+                                service: cover.set_cover_position
+                                target:
+                                  entity_id: cover.volet_sejour_ouest
+                                data:
+                                  position: 20
+                              icon_height: 45px
+                              name: Séjour Ouest
+                              entity: cover.volet_sejour_ouest
+                            # bouton séjour Sud 
+                            - show_name: false
+                              show_icon: true
+                              type: button
+                              tap_action:
+                                action: toggle
+                              icon: mdi:weather-sunset-up
+                              hold_action:
+                                action: call-service
+                                service: cover.set_cover_position
+                                target:
+                                  entity_id: cover.volet_sejour_sud
+                                data:
+                                  position: 20
+                              icon_height: 45px
+                              entity: cover.volet_sejour_sud
+                            - show_name: false
+                              show_icon: true
+                              type: button
+                              tap_action:
+                                action: toggle
+                              icon: mdi:weather-sunset-up
+                              hold_action:
+                                action: call-service
+                                service: cover.set_cover_position
+                                target:
+                                  entity_id: cover.volet_salon_sud
+                                data:
+                                  position: 20
+                              icon_height: 45px
+                              entity: cover.volet_salon_sud
+                            - show_name: false
+                              show_icon: true
+                              type: button
+                              tap_action:
+                                action: toggle
+                              icon: mdi:weather-sunset-up
+                              hold_action:
+                                action: call-service
+                                service: cover.set_cover_position
+                                target:
+                                  entity_id: cover.volet_cuisine
+                                data:
+                                  position: 20
+                              icon_height: 45px
+                              entity: cover.volet_cuisine
+                - type: vertical-stack
+                  cards:
+                    - type: custom:slider-button-card
+                      entity: cover.volet_sejour_ouest
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          target:
+                            entity_id: cover.volet_sejour_ouest
+                          data:
+                            position: 20
+                        icon: mdi:weather-sunset-up
+                    - type: custom:slider-button-card
+                      entity: cover.volet_sejour_sud
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+                    - type: custom:slider-button-card
+                      entity: cover.volet_salon_sud
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+                    - type: custom:slider-button-card
+                      entity: cover.volet_cuisine
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+            #---------- ligne 3
+            - type: horizontal-stack
+              cards:
+                - type: horizontal-stack
+                  cards:
+                    - type: horizontal-stack
+                      cards:
+                        - type: custom:slider-button-card
+                          entity: cover.volets_chambre
+                          slider:
+                            direction: top-bottom
+                            background: gradient
+                            use_state_color: false
+                            use_percentage_bg_opacity: false
+                            toggle_on_click: false
+                            show_track: false
+                            force_square: false
+                            invert: true
+                            show_attribute: false
+                          show_name: true
+                          show_state: true
+                          compact: false
+                          icon:
+                            show: false
+                            use_state_color: true
+                            tap_action:
+                              action: more-info
+                            icon: ''
+                          action_button:
+                            mode: custom
+                            show: false
+                            show_spinner: true
+                            tap_action:
+                              action: call-service
+                              service: cover.set_cover_position
+                              target:
+                                entity_id:
+                                  - cover.volet_cuisine
+                                  - cover.volet_sejour_ouest
+                                  - cover.volet_sejour_sud
+                                  - cover.volet_salon_sud
+                              data:
+                                position: 20
+                            icon: mdi:weather-sunset-up
+                          show_attribute: true
+                          name: Chambre
+                        - type: vertical-stack
+                          cards:
+                            - show_name: false
+                              show_icon: true
+                              type: button
+                              tap_action:
+                                action: toggle
+                              icon: mdi:weather-sunset-up
+                              hold_action:
+                                action: call-service
+                                service: cover.set_cover_position
+                                target:
+                                  entity_id: cover.volet_sejour_ouest
+                                data:
+                                  position: 20
+                              icon_height: 45px
+                              entity: cover.volet_arthur_nord
+                            - show_name: false
+                              show_icon: true
+                              type: button
+                              tap_action:
+                                action: toggle
+                              icon: mdi:weather-sunset-up
+                              hold_action:
+                                action: call-service
+                                service: cover.set_cover_position
+                                target:
+                                  entity_id: cover.volet_sejour_sud
+                                data:
+                                  position: 20
+                              icon_height: 45px
+                              entity: cover.volet_louka_sud
+                            - show_name: false
+                              show_icon: true
+                              type: button
+                              tap_action:
+                                action: toggle
+                              icon: mdi:weather-sunset-up
+                              hold_action:
+                                action: call-service
+                                service: cover.set_cover_position
+                                target:
+                                  entity_id: cover.volet_salon_sud
+                                data:
+                                  position: 20
+                              icon_height: 45px
+                              entity: cover.volet_mael_sud
+                            - show_name: false
+                              show_icon: true
+                              type: button
+                              tap_action:
+                                action: toggle
+                              icon: mdi:weather-sunset-up
+                              hold_action:
+                                action: call-service
+                                service: cover.set_cover_position
+                                target:
+                                  entity_id: cover.volet_cuisine
+                                data:
+                                  position: 20
+                              icon_height: 45px
+                              entity: cover.volet_chambre_est
+                - type: vertical-stack
+                  cards:
+                    - type: custom:slider-button-card
+                      entity: cover.volet_arthur_nord
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          target:
+                            entity_id: cover.volet_sejour_ouest
+                          data:
+                            position: 20
+                        icon: mdi:weather-sunset-up
+                    - type: custom:slider-button-card
+                      entity: cover.volet_louka_sud
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+                    - type: custom:slider-button-card
+                      entity: cover.volet_mael_sud
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+                    - type: custom:slider-button-card
+                      entity: cover.volet_chambre_est
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+            #---------- ligne 4
+            - type: horizontal-stack
+              cards:
+                - type: custom:slider-button-card
+                  entity: cover.volets_palier_sdbs
+                  slider:
+                    direction: top-bottom
+                    background: gradient
+                    use_state_color: false
+                    use_percentage_bg_opacity: false
+                    toggle_on_click: false
+                    show_track: false
+                    force_square: false
+                    invert: true
+                    show_attribute: false
+                  show_name: true
+                  show_state: true
+                  compact: false
+                  icon:
+                    show: false
+                    use_state_color: true
+                    tap_action:
+                      action: more-info
+                    icon: ''
+                  action_button:
+                    mode: custom
+                    show: false
+                    show_spinner: true
+                    tap_action:
+                      action: call-service
+                      service: cover.set_cover_position
+                      target:
+                        entity_id:
+                          - cover.volet_cuisine
+                          - cover.volet_sejour_ouest
+                          - cover.volet_sejour_sud
+                          - cover.volet_salon_sud
+                      data:
+                        position: 20
+                    icon: mdi:weather-sunset-up
+                  show_attribute: true
+                  name: Pallier+SdB
+                - type: vertical-stack
+                  cards:
+                    - type: custom:slider-button-card
+                      entity: cover.volet_pallier_ouest
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+                    - type: custom:slider-button-card
+                      entity: cover.volets_salle_de_bain
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+                    - type: custom:slider-button-card
+                      entity: cover.volet_salle_de_bain_etage
+                      slider:
+                        direction: left-right
+                        background: gradient
+                        use_state_color: false
+                        use_percentage_bg_opacity: false
+                        toggle_on_click: false
+                        show_track: false
+                        force_square: false
+                        invert: true
+                        show_attribute: false
+                      show_name: true
+                      show_state: true
+                      compact: true
+                      icon:
+                        show: true
+                        use_state_color: true
+                        tap_action:
+                          action: more-info
+                        icon: ''
+                      action_button:
+                        mode: custom
+                        show: false
+                        show_spinner: true
+                        tap_action:
+                          action: call-service
+                          service: cover.set_cover_position
+                          service_data:
+                            position: 20
+                          target:
+                            entity_id: cover.volet_arthur_nord
+                        icon: mdi:weather-sunset-up
+
+
