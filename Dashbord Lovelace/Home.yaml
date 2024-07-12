@@ -44,11 +44,11 @@ cards:
             card_mod:
               style:
                 hui-horizontal-stack-card $: |
-                  div#root > :first-child {
+                  div#root > :first-child > * {
                     width: 30%;
                     flex: auto; 
                   }
-                  div#root > :last-child {
+                  div#root > :last-child > * {
                     width: 70%;
                     flex: auto; 
                   }
@@ -216,11 +216,11 @@ cards:
         card_mod:
           style:
             hui-horizontal-stack-card $: |
-              div#root > :first-child {
+              div#root > :first-child > * {
                 width: 50%;
                 flex: auto; 
               }
-              div#root > :last-child {
+              div#root > :last-child > * {
                 width: 50%;
                 flex: auto; 
         card:
@@ -476,11 +476,11 @@ cards:
         card_mod:
           style:
             hui-horizontal-stack-card $: |
-              div#root > :first-child {
+              div#root > :first-child > * {
                 width: 30%;
                 flex: auto; 
               }
-              div#root > :last-child {
+              div#root > :last-child > * {
                 width: 70%;
                 flex: auto; 
         card:
@@ -492,11 +492,11 @@ cards:
         card_mod:
           style:
             hui-horizontal-stack-card $: |
-              div#root > :first-child {
+              div#root > :first-child > * {
                 width: 25%;
                 flex: auto; 
               }
-              div#root > :last-child {
+              div#root > :last-child > * {
                 width: 75%;
                 flex: auto; 
               }
@@ -693,11 +693,11 @@ cards:
                     card_mod:
                       style:
                         hui-horizontal-stack-card $: |
-                          div#root > :first-child {
+                          div#root > :first-child > * {
                             width: 40%;
                             flex: auto; 
                           }
-                          div#root > :last-child {
+                          div#root > :last-child > * {
                             width: 60%;
                             flex: auto; 
                     card:
@@ -779,11 +779,11 @@ cards:
                     card_mod:
                       style:
                         hui-horizontal-stack-card $: |
-                          div#root > :first-child {
+                          div#root > :first-child > * {
                             width: 30%;
                             flex: auto; 
                           }
-                          div#root > :last-child {
+                          div#root > :last-child > * {
                             width: 70%;
                             flex: auto; 
                     card:
@@ -809,11 +809,11 @@ cards:
                     card_mod:
                       style:
                         hui-horizontal-stack-card $: |
-                          div#root > :first-child {
+                          div#root > :first-child > * {
                             width: 40%;
                             flex: auto; 
                           }
-                          div#root > :last-child {
+                          div#root > :last-child > * {
                             width: 60%;
                             flex: auto; 
                     card:
