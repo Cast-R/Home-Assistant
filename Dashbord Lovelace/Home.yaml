@@ -169,16 +169,26 @@ cards:
                           style="width: 20px; height: 20px; color: deepskyblue;">
                           </ha-icon><span>Tempo J+1: <span style="color: var(--text-color-sensor);">${states['sensor.rte_tempo_prochaine_couleur_visuel'].state}</span></span>`
                       ]]]
-                - type: custom:power-flow-card-plus #Flow production
+                - type: custom:power-flow-card-plus
                   full_size: false
                   entities:
-                    battery: {}
+                    battery:
+                      state_of_charge_decimals: 2
                     solar:
                       display_zero_state: true
                       entity: sensor.prod_elec
+                      color_icon: true
+                      color_value: false
+                      color:
+                        - 225
+                        - 146
+                        - 9
+                      invert_state: false
                     grid:
                       entity: sensor.shelly_pro_em_em0_power
                       name: EDF
+                      use_metadata: false
+                      invert_state: false
                     fossil_fuel_percentage:
                       icon: mdi:pine-tree
                       color_icon: true
@@ -188,12 +198,23 @@ cards:
                       state_type: percentage
                       unit_white_space: true
                       use_metadata: false
-                      entity: >-
-                        sensor.electricity_maps_pourcentage_d_energies_fossiles_du_reseau
+                      entity: sensor.electricity_maps_pourcentage_d_energies_fossiles_du_reseau
                       color:
                         - 80
                         - 136
                         - 204
+                    individual:
+                      - entity: sensor.wallbox_pulsarplus_sn_504750_charging_power
+                        icon: mdi:car-electric
+                        name: Charge EV
+                        color_icon: true
+                        decimals: 0
+                        color_value: true
+                        display_zero: true
+                        color:
+                          - 9
+                          - 225
+                          - 74
                   clickable_entities: false
                   display_zero_lines:
                     mode: show
@@ -213,6 +234,7 @@ cards:
                   transparency_zero_lines: 0
                   disable_dots: false
                   dashboard_link: ''
+
       - type: custom:mod-card #Ligne 3 dashbord info reseau et prod
         card_mod:
           style:
@@ -790,16 +812,48 @@ cards:
                     card:
                       type: horizontal-stack
                       cards:
-                        - camera_view: live
-                          type: picture-glance
-                          title: Cam ext 1
-                          entities:
-                            - entity: select.camera_ext_1_floodlight_mode
-                            - entity: select.camera_ext_1_ptz_preset
-                          camera_image: camera.camera_ext_1_sub_lens_0
-                          tap_action:
-                            action: navigate
-                            navigation_path: /tablette-murale/surveillance
+                        - type: custom:frigate-card
+                          cameras:
+                            - camera_entity: camera.camera_ext_1_sub_lens_0
+                              live_provider: auto
+                            - camera_entity: camera.camera_ext_1_sub_lens_1
+                              live_provider: auto
+                            - camera_entity: camera.camera_ext_2_sub_lens_0
+                              live_provider: auto
+                            - camera_entity: camera.camera_ext_2_sub_lens_1
+                              live_provider: auto
+                            - camera_entity: camera.camera_salon_sub
+                              live_provider: auto
+                          view:
+                            default: live
+                          timeline: {}
+                          live:
+                            zoomable: true
+                            controls:
+                              next_previous: {}
+                            show_image_during_load: true
+                          menu:
+                            style: overlay
+                            position: right
+                            buttons:
+                              frigate:
+                                enabled: false
+                              clips:
+                                enabled: true
+                              media_player:
+                                enabled: false
+                              live:
+                                enabled: true
+                              substreams:
+                                enabled: true
+                              recordings:
+                                enabled: false
+                              expand:
+                                enabled: true
+                              fullscreen:
+                                enabled: false
+                          performance:
+                            profile: high
                 - type: conditional # affichage commandes volets
                   conditions:
                     - condition: state
