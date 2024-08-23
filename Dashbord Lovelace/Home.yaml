@@ -814,15 +814,15 @@ cards:
                       cards:
                         - type: custom:frigate-card
                           cameras:
-                            - camera_entity: camera.camera_ext_1_sub_lens_0
+                            - camera_entity: camera.camera_ext_1_main_lens_0
                               live_provider: auto
-                            - camera_entity: camera.camera_ext_1_sub_lens_1
+                            - camera_entity: camera.camera_ext_1_main_lens_1
                               live_provider: auto
-                            - camera_entity: camera.camera_ext_2_sub_lens_0
+                            - camera_entity: camera.camera_ext_2_main_lens_0
                               live_provider: auto
-                            - camera_entity: camera.camera_ext_2_sub_lens_1
+                            - camera_entity: camera.camera_ext_2_main_lens_1
                               live_provider: auto
-                            - camera_entity: camera.camera_salon_sub
+                            - camera_entity: camera.camera_salon_main
                               live_provider: auto
                           view:
                             default: live

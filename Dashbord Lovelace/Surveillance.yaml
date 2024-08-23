@@ -1,103 +1,215 @@
-# update 4 aout 2024
 type: vertical-stack
 cards:
-  - type: custom:mod-card
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: template
+        icon: mdi:home
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/home
+        content: Home
+      - type: template
+        entity: person.ragneau
+        icon: mdi:account
+        icon_color: |
+          {% if is_state(entity,'home') %}
+            green
+          {% else %}
+            red
+          {% endif %}
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+        content: Sébastien
+      - type: template
+        entity: person.carine
+        icon: mdi:account
+        icon_color: |
+          {% if is_state(entity,'home') %}
+            green
+          {% else %}
+            red
+          {% endif %}
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+        content: Carine
+      - type: template
+        entity: switch.camera_ext_1_push_notifications_2
+        icon: mdi:message-badge
+        icon_color: |
+          {% if is_state(entity,'on') %}
+            yellow
+          {% else %}
+            white
+          {% endif %}
+        tap_action:
+          action: toggle
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+        content: Notif Cam1
+      - type: template
+        entity: switch.camera_ext_2_push_notifications_2
+        icon: mdi:message-badge
+        icon_color: |
+          {% if is_state(entity,'on') %}
+            yellow
+          {% else %}
+            white
+          {% endif %}
+        tap_action:
+          action: toggle
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+        content: Notif Cam2
+      - type: template
+        entity: input_boolean.active_surveillance
+        icon: mdi:message-badge
+        icon_color: |
+          {% if is_state(entity,'on') %}
+            yellow
+          {% else %}
+            white
+          {% endif %}
+        tap_action:
+          action: toggle
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+        content: Surveillance active
     card_mod:
       style:
-        hui-horizontal-stack-card $: |
-          div#root > :first-child {
-            width: 25%;
-            flex: auto; 
+        mushroom-template-chip$: |
+          ha-state-icon {
+            margin-right: .10em !important;
+            margin-left: .1em !important;
           }
-          div#root > :last-child {
-            width: 75%;
-            flex: auto; 
+        .: |
+          ha-card {
+            --chip-background: rgba(var(--rgb-primary-background-color), 0.75);
+            --chip-height: 50px;
+            --chip-icon-size: 0.9em;
+            --chip-padding: 0 .5em 0 0;
+            --chip-spacing: 0.9em;
+            background: none;
+            padding: 0 0 0 4px !important;
+            margin: 0px !important;
           }
+  - type: custom:frigate-card
+    cameras:
+      - camera_entity: camera.camera_ext_1_main_lens_0
+        live_provider: auto
+    view:
+      camera_select: live
+    menu:
+      position: right
+      buttons:
+        expand:
+          enabled: true
+        media_player:
+          enabled: false
+        fullscreen:
+          enabled: false
+        frigate:
+          enabled: false
+        cameras:
+          enabled: false
+        live:
+          enabled: false
+      alignment: top
+      style: overlay
+    performance:
+      profile: high
+  - type: custom:frigate-card
+    cameras:
+      - live_provider: auto
+        camera_entity: camera.camera_ext_2_main_lens_0
+    view:
+      camera_select: live
+    menu:
+      position: right
+      buttons:
+        expand:
+          enabled: true
+        media_player:
+          enabled: false
+        fullscreen:
+          enabled: false
+        frigate:
+          enabled: false
+        cameras:
+          enabled: false
+        live:
+          enabled: false
+      alignment: top
+      style: overlay
+    performance:
+      profile: high
+  - type: custom:frigate-card
+    cameras:
+      - live_provider: auto
+        camera_entity: camera.camera_salon_main
+    view:
+      camera_select: live
+    menu:
+      position: right
+      buttons:
+        expand:
+          enabled: true
+        media_player:
+          enabled: false
+        fullscreen:
+          enabled: false
+        frigate:
+          enabled: false
+        cameras:
+          enabled: false
+        live:
+          enabled: false
+      alignment: top
+      style: overlay
+    performance:
+      profile: high
+  - type: conditional
+    conditions:
+      - condition: or
+        conditions:
+          - condition: state
+            entity: person.carine
+            state: not_home
+          - condition: state
+            entity: person.ragneau
+            state: not_home
     card:
-      type: horizontal-stack
-      cards:
-        - type: vertical-stack
-          cards:
-            - type: vertical-stack
-              cards:
-                - type: vertical-stack
-                  cards:
-                    - show_name: true
-                      show_icon: true
-                      type: button
-                      tap_action:
-                        action: navigate
-                        navigation_path: /lovelace/home
-                      name: Accueil
-                      icon: mdi:home
-                    - show_name: true
-                      show_icon: true
-                      type: button
-                      tap_action:
-                        action: more-info
-                      entity: person.ragneau
-                    - show_name: true
-                      show_icon: true
-                      type: button
-                      tap_action:
-                        action: more-info
-                      entity: person.carine
-                    - show_name: true
-                      show_icon: true
-                      type: button
-                      tap_action:
-                        action: toggle
-                      entity: input_boolean.active_surveillance
-                      show_state: false
-                    - show_name: true
-                      show_icon: true
-                      type: button
-                      tap_action:
-                        action: toggle
-                      entity: switch.camera_ext_1_push_notifications_2
-                      show_state: true
-                      name: Notif Cam 1
-                    - show_name: true
-                      show_icon: true
-                      type: button
-                      tap_action:
-                        action: toggle
-                      entity: switch.camera_ext_2_push_notifications_2
-                      name: Notif Cam 2
-                      show_state: true
-        - type: vertical-stack
-          cards:
-            - camera_view: live
-              type: picture-glance
-              title: Cam ext 1
-              entities:
-                - entity: select.camera_ext_1_floodlight_mode
-                - entity: select.camera_ext_1_ptz_preset
-              camera_image: camera.camera_ext_1_sub_lens_0
-              tap_action:
-                action: navigate
-                navigation_path: /nest-hub/camext1
-            - camera_view: live
-              type: picture-glance
-              title: Cam ext 2
-              entities:
-                - entity: select.camera_ext_2_floodlight_mode
-                - entity: select.camera_ext_2_ptz_preset
-              camera_image: camera.camera_ext_2_sub_lens_0
-              tap_action:
-                action: navigate
-                navigation_path: /nest-hub/camext2
-            - show_state: false
-              show_name: false
-              camera_view: live
-              type: picture-entity
-              camera_image: camera.camera_salon_sub
-              aspect_ratio: '2:1'
-              tap_action:
-                action: more-info
-              entity: camera.camera_salon_sub
-            - type: custom:mushroom-select-card
-              entity: input_select.surveillance_camera_int_activation
-              secondary_info: none
-              layout: horizontal
-
+      type: custom:frigate-card
+      cameras:
+        - live_provider: auto
+          camera_entity: camera.galaxy_tab_a
+      view:
+        camera_select: live
+      menu:
+        position: right
+        buttons:
+          expand:
+            enabled: true
+          media_player:
+            enabled: false
+          fullscreen:
+            enabled: false
+          frigate:
+            enabled: false
+          cameras:
+            enabled: false
+          live:
+            enabled: false
+        alignment: top
+        style: overlay
+      performance:
+        profile: high
