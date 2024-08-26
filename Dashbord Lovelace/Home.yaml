@@ -169,7 +169,7 @@ cards:
                           style="width: 20px; height: 20px; color: deepskyblue;">
                           </ha-icon><span>Tempo J+1: <span style="color: var(--text-color-sensor);">${states['sensor.rte_tempo_prochaine_couleur_visuel'].state}</span></span>`
                       ]]]
-                - type: custom:power-flow-card-plus
+                - type: custom:power-flow-card-plus #graph flux energy
                   full_size: false
                   entities:
                     battery:
@@ -493,7 +493,6 @@ cards:
                     height: 55px;    
                     border: 0px;
                     background: transparent;
-                    
                   }
       - type: custom:mod-card #Ligne 4 dashbord - suivi autoconso et histo jour
         card_mod:
@@ -764,34 +763,38 @@ cards:
                                     action: toggle
                                   entity: switch.prise_cheminee
                                   icon: mdi:floor-lamp
-                                - type: custom:slider-button-card # Eclairage Vitrine
-                                  entity: light.ikea_of_sweden_tradfri_driver_10w_lumiere
-                                  slider:
-                                    direction: left-right
-                                    background: gradient
-                                    use_state_color: true
-                                    use_percentage_bg_opacity: false
-                                    show_track: false
-                                    toggle_on_click: false
-                                    force_square: false
-                                    show_attribute: false
-                                  show_name: true
+                                - show_name: true # LED Vitrine TV
+                                  show_icon: true
+                                  type: button
+                                  tap_action:
+                                    action: toggle
+                                  entity: light.led_vitrine_tv
+                                  icon: mdi:led-on
                                   name: Vitrine
-                                  show_state: true
-                                  compact: false
-                                  icon:
-                                    show: true
-                                    use_state_color: true
-                                    tap_action:
-                                      action: more-info
-                                    icon: mdi:mirror-rectangle
-                                  action_button:
-                                    mode: toggle
-                                    icon: mdi:power
-                                    show: true
-                                    show_spinner: true
-                                    tap_action:
-                                      action: toggle
+                                - show_name: true # LED Escalier
+                                  show_icon: true
+                                  type: button
+                                  tap_action:
+                                    action: toggle
+                                  entity: light.ruban_led_escalier
+                                  name: Escalier
+                                  icon: mdi:led-strip-variant
+                                - show_name: true # Eclairage Ext1
+                                  show_icon: true
+                                  type: button
+                                  tap_action:
+                                    action: toggle
+                                  icon: mdi:outdoor-lamp
+                                  name: Terrasse
+                                  entity: switch.eclairage_ext1
+                                - show_name: true # Eclairage Ext2
+                                  show_icon: true
+                                  type: button
+                                  tap_action:
+                                    action: toggle
+                                  icon: mdi:outdoor-lamp
+                                  name: Entrée
+                                  entity: switch.eclairage_ext2
                 - type: conditional # affichage camera surveillance
                   conditions:
                     - condition: state
