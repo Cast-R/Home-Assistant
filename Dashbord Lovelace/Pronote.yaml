@@ -1,18 +1,17 @@
-# update 4 aout 2024
 type: vertical-stack
 cards:
   - type: custom:mod-card
     card_mod:
       style:
         hui-horizontal-stack-card $: |
-          div#root > :first-child { width: 25%;flex: auto}
-          div#root > :last-child { width: 75%; flex: auto}
+          div#root > :first-child > * { width: 25%;flex: auto}
+          div#root > :last-child > * { width: 75%; flex: auto}
     card:
       type: horizontal-stack
       cards:
-        - type: vertical-stack # zone d'affichage des boutons
+        - type: vertical-stack
           cards:
-            - show_name: false #Bouton retour Accueil
+            - show_name: false
               show_icon: true
               type: button
               tap_action:
@@ -21,19 +20,22 @@ cards:
               name: Accueil
               icon: mdi:home
               icon_height: 40px
-            - type: vertical-stack #Info last update données Arthur
-              cards:
-                - type: custom:mushroom-entity-card
-                  entity: sensor.pronote_ragneau_arthur
-                  secondary_info: last-updated
-                  icon: mdi:update
-                  name: Derniere mise a jour pronote
-                  icon_color: green
-                  fill_container: true
-            - type: custom:mushroom-entity-card #Affichage carte identité Arthur
-              entity: person.arthur
-              fill_container: true
-            - show_name: false #Selection de l'affichage
+            - show_name: false
+              show_icon: true
+              type: button
+              entity: input_select.enfant_select
+              show_state: true
+              icon_height: 40px
+              tap_action:
+                action: call-service
+                service: input_select.select_next
+                target:
+                  entity_id: input_select.enfant_select
+                entity: input_select.enfant_select
+                show_name: false
+                data:
+                  cycle: true
+            - show_name: false
               show_icon: true
               type: button
               entity: input_select.pronote_select
@@ -45,22 +47,32 @@ cards:
                 service: input_select.select_next
                 target:
                   entity_id: input_select.pronote_select
+                entity: input_select.pronote_select
+                show_name: false
                 data:
                   cycle: true
-        - type: horizontal-stack #Zone d'affichage de la selection
+        - type: horizontal-stack
           cards:
-            - type: conditional # Choix agenda Arthur
+            ##### Emploi du temps
+            - type: conditional 
               conditions:
                 - condition: state
                   entity: input_select.pronote_select
                   state: Agenda
+                - condition: state
+                  entity: input_select.enfant_select
+                  state: Arthur
               card:
                 type: vertical-stack
                 cards:
-                  - type: markdown # Agenda Arthur J0
+                  ###### Emploi du temps du jour
+                  - type: markdown 
                     content: >
-                      <div>{% set items = state_attr('sensor.pronote_ragneau_arthur_timetable_today','lessons') %}📆 Emploi du temps du :
-                      {{as_timestamp(items[0].start_at) | int |timestamp_custom('%d/%m/%Y', true)}}</div> 
+                      <div>{% set items =
+                      state_attr('sensor.pronote_ragneau_arthur_timetable_today','lessons')
+                      %}📆 Emploi du temps du :
+                      {{as_timestamp(items[0].start_at) | int
+                      |timestamp_custom('%d/%m/%Y', true)}}</div> 
                         <table>   
                           {% for i in range(0,items | count, 1) %}  
                         <tr>  
@@ -169,7 +181,8 @@ cards:
                           tr:nth-child(n+2) > td:nth-child(2) {
                             text-align: left;
                           }
-                  - type: markdown # Agenda Arthur J+1
+                  ###### Emploi du temps du lendemain
+                  - type: markdown
                     content: >
                       <div>{% set items =
                       state_attr('sensor.pronote_ragneau_arthur_timetable_next_day','lessons')
@@ -284,15 +297,18 @@ cards:
                           tr:nth-child(n+2) > td:nth-child(2) {
                             text-align: left;
                           }
-            - type: conditional # Choix note et évaluation
+            - type: conditional
               conditions:
                 - condition: state
                   entity: input_select.pronote_select
                   state: Notes
+                - condition: state
+                  entity: input_select.enfant_select
+                  state: Arthur
               card:
                 type: vertical-stack
                 cards:
-                  - type: markdown # notes Arthur
+                  - type: markdown
                     content: >-
                       <div>📝 Notes</div> <table> {% set items =
                       state_attr('sensor.pronote_ragneau_arthur_grades','grades')%}   
@@ -387,7 +403,7 @@ cards:
                           tr:nth-child(n+2) > td:nth-child(2) {
                             text-align: left;
                               }
-                  - type: markdown # Couleur évaluation Arthur
+                  - type: markdown
                     content: >-
                       <div>📝 Evaluations</div> <table> {% set items =
                       state_attr('sensor.pronote_ragneau_arthur_evaluations','evaluations')%} 
@@ -475,14 +491,17 @@ cards:
                           tr:nth-child(n+2) > td:nth-child(2) {
                             text-align: left;
                               }
-            - type: conditional # choix moyennes
+            - type: conditional
               conditions:
                 - condition: state
                   entity: input_select.pronote_select
                   state: Moyennes
+                - condition: state
+                  entity: input_select.enfant_select
+                  state: Arthur
               card:
                 type: vertical-stack
-                cards: # Moyennes Arthur
+                cards:
                   - type: markdown
                     content: >-
                       {% set items =
