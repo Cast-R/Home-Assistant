@@ -1,102 +1,377 @@
-##Louka
+#######################################
+# Template tarif Tempo
+#######################################
+- unique_id: "tempo_time_prices"
+  sensor:
+    - name: "EDF Tempo Prix Actuel"
+      unique_id: "current"
+      device_class: "monetary"
+      unit_of_measurement: "€/kWh"
+      icon: "mdi:cash-check"
+      availability: >
+        {{ not 'unavailable' in
+          [
+            states('sensor.rte_tempo_couleur_actuelle'),
+            states('binary_sensor.rte_tempo_heures_creuses'),
+          ] and not 'unknown' in
+          [
+            states('sensor.rte_tempo_couleur_actuelle'),
+            states('binary_sensor.rte_tempo_heures_creuses'),
+            states('input_number.tarif_edf_tempo_bleu_hp'),
+            states('input_number.tarif_edf_tempo_bleu_hc'),
+            states('input_number.tarif_edf_tempo_blanc_hp'),
+            states('input_number.tarif_edf_tempo_blanc_hc'),
+            states('input_number.tarif_edf_tempo_rouge_hp'),
+            states('input_number.tarif_edf_tempo_rouge_hc')
+          ]
+        }}
+      state: >
+        {%- if is_state('sensor.rte_tempo_couleur_actuelle', "Bleu") %}
+          {%- if is_state('binary_sensor.rte_tempo_heures_creuses', 'off') %}
+            {{ states('input_number.tarif_edf_tempo_bleu_hp') | float }}
+          {%- else %}
+            {{ states('input_number.tarif_edf_tempo_bleu_hc') | float }}
+          {%- endif %}
+        {%- elif is_state('sensor.rte_tempo_couleur_actuelle', "Blanc") %}
+          {%- if is_state('binary_sensor.rte_tempo_heures_creuses', 'off') %}
+            {{ states('input_number.tarif_edf_tempo_blanc_hp') | float }}
+          {%- else %}
+            {{ states('input_number.tarif_edf_tempo_blanc_hc') | float }}
+          {%- endif %}
+        {%- elif is_state('sensor.rte_tempo_couleur_actuelle', "Rouge") %}
+          {%- if is_state('binary_sensor.rte_tempo_heures_creuses', 'off') %}
+            {{ states('input_number.tarif_edf_tempo_rouge_hp') | float }}
+          {%- else %}
+            {{ states('input_number.tarif_edf_tempo_rouge_hc') | float }}
+          {%- endif %}
+        {%- else %}
+          0
+        {%- endif %}
+    - name: "EDF Tempo Prochain Prix"
+      unique_id: "next"
+      device_class: "monetary"
+      unit_of_measurement: "€/kWh"
+      icon: "mdi:cash-clock"
+      availability: >
+        {{ not 'unavailable' in
+          [
+            states('sensor.rte_tempo_couleur_actuelle'),
+            states('sensor.rte_tempo_prochaine_couleur'),
+            states('binary_sensor.rte_tempo_heures_creuses'),
+          ] and not 'unknown' in
+          [
+            states('sensor.rte_tempo_couleur_actuelle'),
+            states('sensor.rte_tempo_prochaine_couleur'),
+            states('binary_sensor.rte_tempo_heures_creuses'),
+            states('input_number.tarif_edf_tempo_bleu_hp'),
+            states('input_number.tarif_edf_tempo_bleu_hc'),
+            states('input_number.tarif_edf_tempo_blanc_hp'),
+            states('input_number.tarif_edf_tempo_blanc_hc'),
+            states('input_number.tarif_edf_tempo_rouge_hp'),
+            states('input_number.tarif_edf_tempo_rouge_hc')
+          ]
+        }}
+      state: >
+        {%- if is_state('binary_sensor.rte_tempo_heures_creuses', 'on') %}
+          {%- if is_state('sensor.rte_tempo_prochaine_couleur', "Bleu") %}
+            {{ states('input_number.tarif_edf_tempo_bleu_hp') | float }}
+          {%- elif is_state('sensor.rte_tempo_prochaine_couleur', "Blanc") %}
+            {{ states('input_number.tarif_edf_tempo_blanc_hp') | float }}
+          {%- elif is_state('sensor.rte_tempo_prochaine_couleur', "Rouge") %}
+            {{ states('input_number.tarif_edf_tempo_rouge_hp') | float }}
+          {%- else %}
+            0
+          {%- endif %}
+        {%- else %}
+          {%- if is_state('sensor.rte_tempo_couleur_actuelle', "Bleu") %}
+            {{ states('input_number.tarif_edf_tempo_bleu_hc') | float }}
+          {%- elif is_state('sensor.rte_tempo_couleur_actuelle', "Blanc") %}
+            {{ states('input_number.tarif_edf_tempo_blanc_hc') | float }}
+          {%- elif is_state('sensor.rte_tempo_couleur_actuelle', "Rouge") %}
+            {{ states('input_number.tarif_edf_tempo_rouge_hc') | float }}
+          {%- else %}
+            0
+          {%- endif %}
+        {%- endif %}
+
+    - name: "Tarif HP du jour"
+      unique_id: "sensor.current_cost_hp"
+      device_class: "monetary"
+      unit_of_measurement: "c€/kWh"
+      icon: "mdi:cash-check"
+      state: >
+        {%- if is_state('sensor.rte_tempo_couleur_actuelle', "Bleu") %}
+            {{ states('input_number.tarif_edf_tempo_bleu_hp') | float *100 }}
+        {%- elif is_state('sensor.rte_tempo_couleur_actuelle', "Blanc") %}
+            {{ states('input_number.tarif_edf_tempo_blanc_hp') | float *100 }}
+        {%- elif is_state('sensor.rte_tempo_couleur_actuelle', "Rouge") %}
+            {{ states('input_number.tarif_edf_tempo_rouge_hp') | float *100}}
+        {%- else %}
+          0
+        {%- endif %}
+
+    - name: "Tarif HC du jour"
+      unique_id: "sensor.current_cost_hc"
+      device_class: "monetary"
+      unit_of_measurement: "c€/kWh"
+      icon: "mdi:cash-check"
+      state: >
+        {%- if is_state('sensor.rte_tempo_couleur_actuelle', "Bleu") %}
+            {{ states('input_number.tarif_edf_tempo_bleu_hc') | float *100 }}
+        {%- elif is_state('sensor.rte_tempo_couleur_actuelle', "Blanc") %}
+            {{ states('input_number.tarif_edf_tempo_blanc_hc') | float *100 }}
+        {%- elif is_state('sensor.rte_tempo_couleur_actuelle', "Rouge") %}
+            {{ states('input_number.tarif_edf_tempo_rouge_hc') | float *100 }}
+        {%- else %}
+          0
+        {%- endif %}
+
+    - name: Export_prod
+      unique_id: sensor.export_prod
+      unit_of_measurement: "W"
+      icon: "mdi:transmission-tower-export"
+      state: >-
+        {% if states('sensor.shelly_pro_em_em0_power')<"0" %}
+         {{states('sensor.shelly_pro_em_em0_power') |float}}
+        {% else %}
+         0
+        {% endif %}
+
+    - name: Conso_reseau
+      unique_id: sensor.conso_reseau
+      unit_of_measurement: "W"
+      icon: "mdi:transmission-tower-import"
+      state: >-
+        {% if states('sensor.shelly_pro_em_em0_power')>"0" %}
+         {{states('sensor.shelly_pro_em_em0_power') |float}}
+        {% else %}
+         0
+        {% endif %}
+    - name: Prod_elec
+      unique_id: sensor.prod_elec
+      unit_of_measurement: "W"
+      icon: "mdi:solar-power"
+      state: >-
+        {% if states('sensor.shelly_pro_em_em1_power')|float>states('input_number.seuil_de_fuite_onduleur')|float %}
+         {{states('sensor.shelly_pro_em_em1_power') |float}}
+        {% else %}
+         0
+        {% endif %}
+
+    - name: Conso_Domicile
+      unique_id: sensor.conso_domicile
+      unit_of_measurement: "W"
+      icon: "mdi:home-lightning-bolt-outline"
+      state: >-
+        {{states('sensor.conso_reseau') |float + states('sensor.prod_elec') |float + states('sensor.export_prod') |float}}
+
+    - name: Cout_€_base
+      unique_id: sensor.eur_base
+      icon: "mdi:home"
+      state: >-
+        {{states('sensor.shelly_pro_em_em0_total_active_energy') |float * states('input_number.tarif_edf_base') |float}}
+
+    ###### PRONOTE
+    ##Arthur
+    - name: Dernière mise à jour de Pronote Arthur
+      unique_id: sensor.derniere_mise_a_jour_de_pronote_arthur
+      icon: "mdi:update"
+      state: "{{ state_attr('sensor.pronote_ragneau_arthur','updated_at').strftime('%d-%m-%Y à %H:%M') }}"
+
+    - name: Début des cours de Arthur - Demain
+      unique_id: sensor.debut_des_cours_de_arthur_demain
+      icon: "mdi:clock-time-five-outline"
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'day_start_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
+
+    - name: Fin des cours de Arthur - Demain
+      unique_id: sensor.fin_des_cours_de_arthur_demain
+      icon: "mdi:clock-time-five-outline"
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'day_end_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
+
+    - name: Date début des cours de Arthur - Demain
+      unique_id: sensor.date_debut_des_cours_de_arthur_demain
+      icon: "mdi:clock-time-five-outline"
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'lessons')[0] is defined %}
+         {%- set date = state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'day_start_at').strftime('%A %H:%M') 
+            | replace('Monday', 'L.')
+            | replace('Tuesday', 'M.')
+            | replace('Wednesday', 'Me.')
+            | replace('Thursday', 'J.')
+            | replace('Friday', 'V.')
+            | replace('Saturday', 'S.')
+            | replace('Sunday', 'D.') %}
+         {{ date }}
+        {% else %}
+         non
+        {% endif %}
+
+    - name: Journée de cours de Arthur - Demain
+      unique_id: sensor.journée_de_cours_de_arthur_demain
+      icon: "mdi:clock-time-five-outline"
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'day_start_at').strftime('%H:%M')}} - {{state_attr('sensor.pronote_ragneau_arthur_timetable_tomorrow', 'day_end_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
+
+    - name: Début des cours de Arthur - Aujourd'hui
+      unique_id: sensor.debut_des_cours_de_arthur_aujourd_hui
+      icon: "mdi:clock-time-five-outline"
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'lessons')[0] is defined %}
+          {{state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'day_start_at').strftime('%H:%M')}}
+        {% else %}
+           Pas cours
+        {% endif %}
+
+    - name: Fin des cours de Arthur - Aujourd'hui
+      unique_id: sensor.fin_des_cours_de_arthur_aujourd_hui
+      icon: "mdi:clock-time-five-outline"
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'day_end_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
+
+    - name: Date début des cours de Arthur - Aujourd'hui
+      unique_id: sensor.date_debut_des_cours_de_arthur_aujourd_hui
+      icon: "mdi:clock-time-five-outline"
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'lessons')[0] is defined %}
+         {%- set date = state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'day_start_at').strftime('%A %H:%M') 
+            | replace('Monday', 'L.')
+            | replace('Tuesday', 'M.')
+            | replace('Wednesday', 'Me.')
+            | replace('Thursday', 'J.')
+            | replace('Friday', 'V.')
+            | replace('Saturday', 'S.')
+            | replace('Sunday', 'D.') %}
+         {{ date }}
+        {% else %}
+         non
+        {% endif %}
+
+    - name: Journée de cours de Arthur - Aujourd'hui
+      unique_id: sensor.journee_de_cours_de_arthur_aujourd_hui
+      icon: "mdi:clock-time-five-outline"
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'day_start_at').strftime('%H:%M')}} - {{state_attr('sensor.pronote_ragneau_arthur_timetable_today', 'day_end_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
+
+    ##Louka
     - name: Dernière mise à jour de Pronote louka
       unique_id: sensor.derniere_mise_a_jour_de_pronote_louka
       icon: "mdi:update"
-      state: "{{ state_attr('sensor.pronote_ragneau_louka','updated_at').strftime('%d-%m-%Y à %H:%M') }}"  
-        
+      state: "{{ state_attr('sensor.pronote_ragneau_louka','updated_at').strftime('%d-%m-%Y à %H:%M') }}"
+
     - name: Début des cours de louka - Demain
       unique_id: sensor.debut_des_cours_de_louka_demain
       icon: "mdi:clock-time-five-outline"
-      state: >-            
-                {% if state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'lessons')[0] is defined %}
-                 {{state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_start_at').strftime('%H:%M')}}
-                {% else %}
-                 Pas cours
-                {% endif %}                  
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_start_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
 
     - name: Fin des cours de louka - Demain
       unique_id: sensor.fin_des_cours_de_louka_demain
       icon: "mdi:clock-time-five-outline"
-      state: >- 
-                {% if state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'lessons')[0] is defined %}
-                 {{state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_end_at').strftime('%H:%M')}}
-                {% else %}
-                 Pas cours
-                {% endif %} 
-            
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_end_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
+
     - name: Date début des cours de louka - Demain
       unique_id: sensor.date_debut_des_cours_de_louka_demain
       icon: "mdi:clock-time-five-outline"
-      state: >- 
-                {% if state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'lessons')[0] is defined %}
-                 {%- set date = state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_start_at').strftime('%A %H:%M') 
-                    | replace('Monday', 'L.')
-                    | replace('Tuesday', 'M.')
-                    | replace('Wednesday', 'Me.')
-                    | replace('Thursday', 'J.')
-                    | replace('Friday', 'V.')
-                    | replace('Saturday', 'S.')
-                    | replace('Sunday', 'D.') %}
-                 {{ date }}
-                {% else %}
-                 non
-                {% endif %}
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'lessons')[0] is defined %}
+         {%- set date = state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_start_at').strftime('%A %H:%M') 
+            | replace('Monday', 'L.')
+            | replace('Tuesday', 'M.')
+            | replace('Wednesday', 'Me.')
+            | replace('Thursday', 'J.')
+            | replace('Friday', 'V.')
+            | replace('Saturday', 'S.')
+            | replace('Sunday', 'D.') %}
+         {{ date }}
+        {% else %}
+         non
+        {% endif %}
 
     - name: Journée de cours de louka - Demain
       unique_id: sensor.journée_de_cours_de_louka_demain
       icon: "mdi:clock-time-five-outline"
-      state: >-            
-                {% if state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'lessons')[0] is defined %}
-                 {{state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_start_at').strftime('%H:%M')}} - {{state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_end_at').strftime('%H:%M')}}
-                {% else %}
-                 Pas cours
-                {% endif %} 
-                
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_start_at').strftime('%H:%M')}} - {{state_attr('sensor.pronote_ragneau_louka_timetable_tomorrow', 'day_end_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
+
     - name: Début des cours de louka - Aujourd'hui
       unique_id: sensor.debut_des_cours_de_louka_aujourd_hui
       icon: "mdi:clock-time-five-outline"
-      state: >-            
-                {% if state_attr('sensor.pronote_ragneau_louka_timetable_today', 'lessons')[0] is defined %}
-                  {{state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_start_at').strftime('%H:%M')}}
-                {% else %}
-                   Pas cours
-                {% endif %} 
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_louka_timetable_today', 'lessons')[0] is defined %}
+          {{state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_start_at').strftime('%H:%M')}}
+        {% else %}
+           Pas cours
+        {% endif %}
 
     - name: Fin des cours de louka - Aujourd'hui
       unique_id: sensor.fin_des_cours_de_louka_aujourd_hui
       icon: "mdi:clock-time-five-outline"
-      state: >- 
-                {% if state_attr('sensor.pronote_ragneau_louka_timetable_today', 'lessons')[0] is defined %}
-                 {{state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_end_at').strftime('%H:%M')}}
-                {% else %}
-                 Pas cours
-                {% endif %} 
-               
-                                
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_louka_timetable_today', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_end_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
+
     - name: Date début des cours de louka - Aujourd'hui
       unique_id: sensor.date_debut_des_cours_de_louka_aujourd_hui
       icon: "mdi:clock-time-five-outline"
-      state: >- 
-                {% if state_attr('sensor.pronote_ragneau_louka_timetable_today', 'lessons')[0] is defined %}
-                 {%- set date = state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_start_at').strftime('%A %H:%M') 
-                    | replace('Monday', 'L.')
-                    | replace('Tuesday', 'M.')
-                    | replace('Wednesday', 'Me.')
-                    | replace('Thursday', 'J.')
-                    | replace('Friday', 'V.')
-                    | replace('Saturday', 'S.')
-                    | replace('Sunday', 'D.') %}
-                 {{ date }}
-                {% else %}
-                 non
-                {% endif %}
-                
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_louka_timetable_today', 'lessons')[0] is defined %}
+         {%- set date = state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_start_at').strftime('%A %H:%M') 
+            | replace('Monday', 'L.')
+            | replace('Tuesday', 'M.')
+            | replace('Wednesday', 'Me.')
+            | replace('Thursday', 'J.')
+            | replace('Friday', 'V.')
+            | replace('Saturday', 'S.')
+            | replace('Sunday', 'D.') %}
+         {{ date }}
+        {% else %}
+         non
+        {% endif %}
+
     - name: Journée de cours de louka - Aujourd'hui
       unique_id: sensor.journee_de_cours_de_louka_aujourd_hui
       icon: "mdi:clock-time-five-outline"
-      state: >-            
-                {% if state_attr('sensor.pronote_ragneau_louka_timetable_today', 'lessons')[0] is defined %}
-                 {{state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_start_at').strftime('%H:%M')}} - {{state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_end_at').strftime('%H:%M')}}
-                {% else %}
-                 Pas cours
-                {% endif %} 
+      state: >-
+        {% if state_attr('sensor.pronote_ragneau_louka_timetable_today', 'lessons')[0] is defined %}
+         {{state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_start_at').strftime('%H:%M')}} - {{state_attr('sensor.pronote_ragneau_louka_timetable_today', 'day_end_at').strftime('%H:%M')}}
+        {% else %}
+         Pas cours
+        {% endif %}
